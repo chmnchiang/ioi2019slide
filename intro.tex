@@ -11,29 +11,28 @@
   且出去這段軌道車速會變為 $t_i$。每一單位長的煞車軌道可以將車子減速一單位，
   請找一個將所有軌道都用到並合乎規定、且用的煞車軌道長度總合最短的方案。($n \leq 2 \cdot 10^5$)
 \end{problem}
-\pause
-
+\pause \disskip
 \begin{figure}
 \includegraphics[width=0.3\textwidth]{figure/bbg.jpg}%
 \end{figure}
 \end{frame}
 
 \begin{frame}{{\secname} -- 自我介紹}
-  \begin{enumerate}
+  \begin{enumerate}[<+->]
     \item 字串
     \item 圖論、flow
     \item 數學
-    \item<2-> 還是數學…
+    \item 還是數學…
   \end{enumerate}
 
-  \visible<3->{
-    \begin{figure}
+  \onslide<+->
+  \begin{figure}
     \includegraphics[width=0.6\textwidth]{figure/course_match.png}%
-    \end{figure}
-  }
+  \end{figure}
 \end{frame}
 
 \begin{frame}{{\secname} -- 視力檢查}
+  \pause
   \begin{itemize}
     \item<+-> {\fontsize{60pt}{100pt}\selectfont >} \\[20pt]
     \item<+-> {\Huge $\sqcup$} \\[10pt]
@@ -43,9 +42,8 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{\secname -- 數學}
+\begin{frame}{\btitle{數學}}
   程式競賽中的數學：
-
   \begin{enumerate}
     \setlength{\itemindent}{2em}
     \item 數學想法
@@ -59,22 +57,22 @@
     都滿足 $d_i \leq d_{i+1}$。給你一個數 $N$，請你把他寫成最少的遞增數的和。
     ($\log_{10} N \leq 5 \cdot 10^5$)
   \end{problem} 
-  \pause
-
+  \pause \disskip
   \begin{figure}
     \includegraphics[width=0.5\textwidth]{figure/angry2.png}
   \end{figure}
 \end{frame}
 
 \begin{frame}{{\secname} -- 題解}
-  \begin{enumerate}
-    \item<+-> 關鍵的第一步：
+  \begin{enumerate}[<+->]
+    \item 關鍵的第一步：
       \visible<+->{ 乘 $9$ 。}
     \item $111\dots111 \times 9 = 999\dots999 = 10^k - 1$
+    \item 變成求位數和！
   \end{enumerate}
 \end{frame}
 
-\begin{frame}{\secname -- 數學想法}
+\begin{frame}{\btitle{數學想法}}
   \begin{problem}[完全圖的分解]
     給你一個完全圖 $K_{2n}$，請你將所有邊分解成 $n$ 個不相交的 Hamilton Path
     （通過所有點恰一次的鍊）。
@@ -118,7 +116,7 @@
 \end{frame}
 
 
-\begin{frame}{\secname -- 震驚！}
+\begin{frame}{\btitle{震驚！}}
     \begin{figure}
     \begin{tikzpicture}[
         nd/.style={fill=black, circle, minimum size=0.1pt, inner sep=0.5mm},
@@ -138,7 +136,7 @@
     \end{figure}
 \end{frame}
 
-\begin{frame}{\secname \ -- 數學知識}
+\begin{frame}{\btitle{數學知識}}
   \begin{problem}[平方國的平方幣, TIOJ 1349]
     給你一個正整數 $n$，請找出最小的 $k$，使得存在 $k$ 個平方數 $a_1^2, a_2^2, \cdots, a_k^2$
     使得 $\sum a_i^2 = n$ 。($n \leq 10^7$)
@@ -164,7 +162,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{\secname \ -- 怪怪的解法}
+\begin{frame}{\btitle{怪怪的解法}}
   \pause
   \begin{enumerate}[<+->]
     \item 矩陣樹定理。
@@ -173,8 +171,8 @@
     \item ???
     \item Profit
   \end{enumerate}
-  \pause
 
+  \onslide<+->
   \begin{figure}
     \includegraphics[width=0.9\textwidth]{figure/profit.png}
   \end{figure}

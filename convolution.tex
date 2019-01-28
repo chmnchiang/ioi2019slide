@@ -15,16 +15,16 @@
     \item 組合計數 DP
   \end{itemize}
 
-  \pause
+  \onslide<+->
   一般時間複雜度 $\ord(n^2)$。
 \end{frame}
 
 \begin{frame}{\btitle{多項式乘法}}
   令
   \begin{align*}
-    f(x) &= a_0 + a_1 x + \dots + a_{n-1} x^{n-1}, \\
-    g(x) &= b_0 + b_1 x + \dots + b_{n-1} x^{n-1}, \\
-    f(x)g(x) &= c_0 + c_1 x + \dots + c_{2n-1} x^{2n-1}
+    \onslide<+->{f(x) &= a_0 + a_1 x + \dots + a_{n-1} x^{n-1},} \\
+    \onslide<+->{g(x) &= b_0 + b_1 x + \dots + b_{n-1} x^{n-1},} \\
+    \onslide<+->{f(x)g(x) &= c_0 + c_1 x + \dots + c_{2n-1} x^{2n-1}}
   \end{align*}
   \pause
   \[ c_k = \sum_{\color{red}{k = i+j}} a_i b_j \]
@@ -82,7 +82,7 @@
 \end{frame}
 
 \def\myaddv{\vphantom{\omega_n^{()}}}
-\begin{frame}
+\begin{frame}{\btitle{離散傅立葉變換}}
   找 $x_k = \omega_n^k, \, 0 \leq k < n$，其中 $\omega_n \defeq \ex^{2 \pi \img / n}$。\\
   \pause
   現在 $f(x_k) = a_0 + a_1 \omega_n^k + a_2 \omega_n^{2k} + \dots + a_{n-1} \omega_n^{(n-1)k}
@@ -138,7 +138,7 @@
   %}
 %\end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile]{\btitle{離散傅立葉變換}}
   \begin{python}[./genarr.py]
   \end{python}
   \[
@@ -156,7 +156,7 @@
   \end{tikzpicture}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{離散傅立葉變換}}
 \begin{alignat*}{2}
   \onslide<+->{F(A)_k &= \sum_{j=0}^{n-1} \omega_n^{jk} A_j &&} \\
   \onslide<+->{&= \sum_{j=0}^{n-1} \ex^{2 \pi \img j k / n} A_j && \\}
@@ -168,14 +168,14 @@
 \end{alignat*}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{離散傅立葉變換}}
   複雜度：
   \[ T(n) = 2 T(n/2) + \ord(n) \]
   \pause
   \[ \implies T(n) = \ord(n \log n) \]
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{離散傅立葉變換}}
   前面的「夢想」：
   \disskip
   \begin{enumerate}
@@ -193,7 +193,7 @@
   適當的在前面補 $0$ 還是可以計算多項式乘法！
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{離散傅立葉變換}}
   \begin{enumerate}
     \item \alt<2->{計算 $\fourier(A)$。\  ($\ord(n \log n)$ $\textcolor{mgreen}{\checkmark}$)}{
         用 $(x_1, f(x_1)), (x_2, f(x_2)), \dots, (x_n, f(x_n))$ 表示 $f$。}
@@ -204,7 +204,7 @@
     \item \alt<5->{計算 $C = \fourier^{-1}(\fourier(C))$。\ \alt<8>{($\ord(n \log n)$ $\textcolor{mgreen}{\checkmark}$)}{\textcolor{red}{?}}}{反推 $f \cdot g$。}
   \end{enumerate}
 
-  \begin{theorem}<6->
+  \begin{theorem}[離散傅立葉變換逆變換]<6->
     如果 $\fourier(A) = B$，則
     \[ A_k = \alert<6>{\frac{1}{n}} \sum_{j=0}^{n-1} \omega_n^{\alert<6>{- j k}} B_j \]
     %= \frac{1}{n}\sum_j \omega^{kj} B_j = \frac{1}{n} \sum_j (\overline\omega)^{-kj} B_j \]
@@ -213,7 +213,7 @@
   \onslide<7>{和正變換一樣，只要將 $\omega \to \omega^{-1}$}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile]{\btitle{離散傅立葉變換}}
   和 Karatsuba algorithm 一樣，要實作上效率高需要巧思。
 
   \begin{minted}[autogobble, escapeinside=αα]{cpp}
@@ -237,7 +237,7 @@ void fft(int n, cplx a[], bool inv=false)
   \end{tikzpicture}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile]{\btitle{離散傅立葉變換}}
   \begin{minted}[autogobble, escapeinside=αα]{cpp}
 double d = inv ? 1 : -1;
 for (int m = 2; m <= n; m <<= 1) {
@@ -255,7 +255,7 @@ for (int m = 2; m <= n; m <<= 1) {
   \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile]{\btitle{另一個問題}}
   \begin{problem}[經典問題]
     有 $n$ 個技能 $m$ 個人，每個人都會這 $n$ 個技能中的某一些。如果 $B$ 會的所有技能 $A$
     也會，那我們就說 $A$ 完全贏過 $B$。對每個人輸出他完全贏過多少人（包含自己）。
@@ -275,7 +275,7 @@ for (int i = 0; i < (1<<n); i++) {
 \footnote{引用自 2017 年 IOI-Camp 捲積講義}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile]{\btitle{另一個問題}}
   \begin{minted}{cpp}
 for (int k = 0; k < n; k++) {
     for (int i = 0; i < (1<<n); i++) {
@@ -296,11 +296,11 @@ for (int k = 0; k < n; k++) {
 \end{enumerate}
 \end{frame}
 
-\begin{frame}{\btitle{變換}}
+\begin{frame}{\btitle{另一個變換}}
   考慮多項式
   \[ F(x_1, \dots, x_n) = \sum_{I = \{i_1, \dots, i_k\} \subseteq [n]} a_I x_{i_1} x_{i_2} \cdots x_{i_k}
   = \sum_{I \subseteq [n]} a_I x_I \]
-  $a_I$ 表示會的技能的集合為 $I$ 的人數。
+  $a_I$ 表示會的技能的集合為 $I$ 的人數。 \pause
 
   我們最後會得到一個新的多項式：
   \[ \tilde{F}(x_1, \dots, x_n) \defeq \sum_{I \subseteq [n]} \left( \sum_{J \subseteq I} a_J \right) x_I \]
@@ -321,8 +321,8 @@ for (int k = 0; k < n; k++) {
     請你求出
     \[ c_k \defeq \sum_{k = i \texttt{|} j} a_i b_j \]
     對所有 $0 \leq k < 2^n$，其中 \texttt{|} 表示 bit OR。 ($n \leq 25$)
-  \end{problem}
-  硬揍下去 $\ord(2^{2n})$。
+  \end{problem} \pause
+  硬揍下去 $\ord(2^{2n}) \implies$ 痛的不得了。
 \end{frame}
 
 \begin{frame}{\btitle{做法}}
@@ -402,22 +402,23 @@ for (int i = (1<<n)-1; i >= 0; i--) {
 
 \begin{frame}{\btitle{舉一反三}}
   令 $F(\bm{x}) = F_0(x_2, x_3, \dots, x_{n-1}) + F_1(x_2, x_3, \dots, x_{n-1}) x_1$，
-  且 $I' = I \setminus \{1\}$
+  且 $I' = I \setminus \{1\}$ \pause
   \begin{alignat*}{2}
-    \tilde{F}(\bm{x}) &= \sum_{I \subseteq [n]} F(I) x_I && \\
-    &= \sum_{1 \not\in I} F(I) x_I &&+ \sum_{1 \in I} F(I) x_I \\
-    &= \sum_{1 \not\in I} (F_0(I') + F_1(I')) x_I &&+ \sum_{1 \in I} (F_0(I') - F_1(I')) x_I \\
-    &= \sum_{1 \not\in I} (F_0 + F_1)(I') x_I &&+ \sum_{1 \in I} (F_0 - F_1)(I') x_I
+    \onslide<+->{\tilde{F}(\bm{x}) &= \sum_{I \subseteq [n]} F(I) x_I} && \\
+    &\onslide<+->{= \sum_{1 \not\in I} F(I) x_I &&+ \sum_{1 \in I} F(I) x_I} \\
+    &\onslide<+->{= \sum_{1 \not\in I} (F_0(I') + F_1(I')) x_I &&+ \sum_{1 \in I} (F_0(I') - F_1(I')) x_I} \\
+    &\onslide<+->{= \sum_{1 \not\in I} (F_0 + F_1)(I') x_I &&+ \sum_{1 \in I} (F_0 - F_1)(I') x_I}
   \end{alignat*}
+  \onslide<+->
   遞迴下去 $T(n) = 2T(n) + \ord(n) \implies T(n) = \ord(n \log n)$
 \end{frame}
 
 \begin{frame}{\btitle{習題}}
-  這個變換又叫作 Walsh–Hadamard transform。
+  這個變換又叫作 Walsh–Hadamard transform。 \pause
   \begin{exercise}
     \begin{enumerate}
       \item 找出 Walsh–Hadamard transform 的逆變換。
-      \item 寫出 inplace 的 Walsh–Hadamard transform。
+      \item 寫出 in-place 的 Walsh–Hadamard transform。
     \end{enumerate}
   \end{exercise}
 \end{frame}

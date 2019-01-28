@@ -4,14 +4,14 @@
 
 \section{組合}
 
-\begin{frame}{\btitle{目標}}
+\begin{frame}{\btitle{一些基本題目}}
   \begin{enumerate}[<+->]
     \item $x_1 + x_2 + \dots + x_n = m$，且每個 $x_i \geq 0$ 的方法數：
       \onslide<+->{ \begin{flalign*} \implies {m+n-1 \choose m} && \end{flalign*} }
     \item 用 $1 \times 2$ 瓷磚（可旋轉）排滿 $2 \times n$ 長方形的方法數： \\
       \onslide<+->{$\mathtt{Fib}_n = \mathtt{Fib}_{n-1} + \mathtt{Fib}_{n-2}$, $\mathtt{Fib}_1 = 1$, $\mathtt{Fib}_0 = 0$}
   \end{enumerate}
-    \pause
+  \onslide<+->
   \begin{missue}
   \begin{figure}
     \includegraphics[width=0.5\textwidth]{figure/fib.png}
@@ -19,7 +19,7 @@
   \end{missue}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{費氏數列}}
   \[
   \begin{bmatrix}
     F_{n+1} \\
@@ -40,7 +40,7 @@
 如果求的是模一個數 $m \implies$ 快速冪：$\ord(\log n)$。
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{一些基本題目}}
   \begin{enumerate}[<+->]
     \setcounter{enumi}{2}
   \item 把正 $n+2$ 邊型三角分割的方法數：\onslide<+->{卡特蘭數 
@@ -51,7 +51,7 @@
   \end{enumerate}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{一些基本題目}}
   \begin{enumerate}[<+->]
     \setcounter{enumi}{4}
   \item $n$ 個點可以構成的生成樹的個數，點視為相異的：\onslide<+->{$n^{n-2}$} \\[2ex]
@@ -68,7 +68,7 @@
   \end{problem}
   \pause
 
-  \begin{enumerate}
+  \begin{enumerate}[<+->]
     \item 有很多\emph{物體}構成一個集合 $X$。
     \item 有一些\emph{旋轉} $G$。
     \item 旋轉相同視為相同，也就是旋轉會把物件劃分成許多等價類。
@@ -85,7 +85,7 @@
   \end{scope}
 }
 
-\begin{frame}{\btitle{目標}}
+\begin{frame}{\btitle{Burnside}}
   \begin{columns}
     \begin{column}{0.6\textwidth}
       \begin{figure}
@@ -130,7 +130,7 @@
 
 \begin{frame}
   \begin{definition}
-    \begin{enumerate}
+    \begin{enumerate}[<+->]
       \item $G_x \defeq \{ g \in G : g x = x \}$，也就是固定 $x$ 下，所有不會動到 $x$ 的作用。
       \item $X^g \defeq \{ x \in X : g x = x \}$，也就是固定一個作用 $g$ 下的\emph{不動點}。
       \item $G x \defeq \{ gx : g \in G \}$，也被稱作是 $x$ 在 $G$ 下的\emph{軌道}。
@@ -267,12 +267,12 @@
 \begin{frame}
   \begin{proof}
   \begin{align*}
-   \frac{1}{\abs{G}} \sum_{g \in G} \abs{X^g} &= \frac{1}{\abs{G}}
-   \sharp \big\{ (x, g) \mid x \in X, g \in G, x g = g \big\} \\
-   &= \frac{1}{\abs{G}} \sum_{x \in X} \abs{G_x} \\
-   &{=} \frac{1}{\abs{G}} \sum_{x \in X} \frac{\abs{G}}{\abs{Gx}}\\
-   &{=} \sum_{Gx \in X / G} \ \sum_{x \in Gx} \frac{1}{\abs{Gx}} = \sum_{Gx \in X/G} 1\\
-   &= \abs{X / G}
+    \onslide<+->{\frac{1}{\abs{G}} \sum_{g \in G} \abs{X^g}} &\onslide<+->{= \frac{1}{\abs{G}}
+    \sharp \big\{ (x, g) \mid x \in X, g \in G, x g = g \big\}} \\
+    & \onslide<+->{= \frac{1}{\abs{G}} \sum_{x \in X} \abs{G_x}} \\
+    & \onslide<+->{{=} \frac{1}{\abs{G}} \sum_{x \in X} \frac{\abs{G}}{\abs{Gx}}}\\
+    & \onslide<+->{{=} \sum_{Gx \in X / G} \ \sum_{x \in Gx} \frac{1}{\abs{Gx}} = \sum_{Gx \in X/G} 1 }\\
+    & \onslide<+->{= \abs{X / G}}
   \end{align*}
   \end{proof}
 \end{frame}

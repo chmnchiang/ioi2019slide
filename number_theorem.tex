@@ -10,7 +10,7 @@
   \end{problem}
 \end{frame}
 
-\begin{frame}{\btitle{目標}}
+\begin{frame}{\btitle{基礎}}
   %\bigskip
   %\begin{enumerate}
     %\item $a^b \equiv \raisebox{-.2mm}{\text{?}} \pmod{d}$: 快速冪，$\ord(\log b)$。
@@ -32,7 +32,7 @@
   \end{definition}
 \end{frame}
 
-\begin{frame}[fragile]{\btitle{目標}}
+\begin{frame}[fragile]{\btitle{基礎}}
   \begin{problem}[An Easy Problem -- Subtask \#2, NTUJ 1423]
     給你 $a$, $b$, $m$，求 $c \equiv a^b \pmod{m}$。 ($0 \leq a < m \leq 10^{9}$, $b \leq 10^{12}$)
   \end{problem} \pause \disskip
@@ -40,8 +40,9 @@
   \begin{itemize}[<+->]
     \item 如果 $b = 2b'$，則 $a^b \equiv \big( a^{b'} \big)^2 \pmod{m}$。
     \item 如果 $b = 2b' + 1$，則 $a^b \equiv a \cdot \big( a^{b'} \big)^2 \pmod{m}$。
-  \end{itemize} \vspace{-1em} \pause
+  \end{itemize} \disskip
   \definecolor{haohao}{rgb}{0.69,0.00,0.25}
+  \onslide<+->
   \begin{minted}[escapeinside=αα]{cpp}
 long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}}α m) [
     if (!a) return 1;
@@ -52,7 +53,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   \end{minted}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{基礎}}
   \begin{problem}[An Easy Problem -- Subtask \#3, NTUJ 1423]
     給你 $a$, $c$, $m$，求 $b$ 使得 $a^b \equiv c \pmod{m}$。\\
     ($a, b, m \leq 10^{9}$, $m$ 是質數)
@@ -70,7 +71,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   \end{missue}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{模逆元}}
   也就是要找 $b$ 使得
   \[ a b \equiv 1 \pmod{m} \onslide<+(1)->{\implies \exists k',\, ab = k'm + 1 \implies \exists k,\, ba + km = 1}\]
   \pause \disskip
@@ -87,7 +88,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   \end{enumerate}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{模逆元}}
   \begin{theorem}[模逆元存在的條件]
    模 $m$ 下 $a^{-1}$ 存在 $\iff \gcd(a, m) = 1$。
   \end{theorem}
@@ -102,7 +103,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   \end{missue}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{乘法群}}
   \begin{missue}
     \centering
     $(\bZ / m\bZ)^\times$ 有多少個元素？
@@ -120,7 +121,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   那對於 $\gcd(p, q) = 1$，$\varphi(p q)$ 呢？
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{韓信點兵}}
   「相傳漢高祖劉邦有天趁喝酒的時候問大將軍韓信統御兵士多少，
 韓信答說，每 $3$ 人一列餘 $1$ 人、 $4$ 人一列餘 $2$ 人、$5$ 人一列餘 $4$ 人。
 劉邦與張良都算不出來，以為韓信兵很多，嚇到吃手手。」
@@ -136,7 +137,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
 \]
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{中國剩餘定理}}
   \begin{theorem}[中國剩餘定理]
     如果 $m_1, m_2, \dots, m_n$ \alert<1>{互質}，則
     \[
@@ -154,7 +155,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   \end{theorem}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{中國剩餘定理}}
   \begin{theorem}[中國剩餘定理]
     如果 $m_1, m_2, \dots, m_n$ 互質，則
     \[ \psi(x) = (x \bmod m_1, x \bmod m_2, \dots, x \bmod m_k) \]
@@ -174,7 +175,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   }
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{Euler $\varphi$}}
   \begin{theorem}
     假設 $n, m$ 互質，則 $\varphi(nm) = \varphi(n) \varphi(m)$。
   \end{theorem}
@@ -190,12 +191,13 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   \end{proof}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{Euler $\varphi$}}
   \begin{itemize}[<+->]
     \item $\varphi(p) = p-1$。
     \item $\varphi(p^k) = p^{k-1}(p-1)$。
   \end{itemize}
 
+  \onslide<+->
   \begin{theorem}
     如果 $n = p_1^{\alpha_1} p_2^{\alpha_2} \dotsm p_k^{\alpha_k}$，則
     \[
@@ -207,14 +209,14 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   \end{theorem}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{題目}}
   \begin{problem}[Cool lucky function, {\small NTU final 2014}]
     給你 $n$ 個正整數 $a_1, a_2, \dots, a_n$，問你這些數字之中是否存在兩個互質的數對。
     ($2 \leq n \leq 10^5, \, a_i \leq 10^6$）
   \end{problem}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{趣事}}
   \begin{problem}[數學歸納法考題]
     令 $x_1 = 1$, $x_{n+1} = 2x_n + 1$，請證明 $x_{n} \leq 2^n - 1$。
   \end{problem} \pause
@@ -227,7 +229,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   \end{proof}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{趣事}}
   結果老師打錯一個字：
   \begin{problem}[數學歸納法考題 -- 錯誤版]
     令 $x_1 = 1$, $x_{n+1} = 2x_n + 1$，請證明 $x_{n} \leq 2^n \alert<1>{+} 1$。
@@ -241,7 +243,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   \end{proof}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{題目}}
   有時候題目變難，反而好做！ \pause
 
   \begin{problem}[Cool lucky function -- Hard]
@@ -256,7 +258,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   \]
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{乘法群}}
   \begin{missue}
     \centering
     $(\bZ / m\bZ)^\times$ 長什麼樣子？
@@ -269,7 +271,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   先看 $(\bZ / p \bZ)^\times$。
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{乘法群}}
   \begin{figure}
     \begin{tikzpicture}[
         nd/.style={draw, circle, inner sep=0.2ex, minimum size=1.5em},
@@ -324,7 +326,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   }
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{原根}}
   %\begin{definition}[階]
     %定義 $n \defeq \operatorname{ord}_m(a)$ 為最小的正整數 $n$ 使得 $a^n \equiv 1 \pmod{m}$。
   %\end{definition}
@@ -338,10 +340,9 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   \begin{theorem}[原根存在的條件]
     原根存在若且唯若 $m = 1, 2, 4, p^k, 2p^k$。
   \end{theorem}
-  \pause
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{Euler 定理}}
   \begin{theorem}[Euler 定理]
     \begin{itemize}
       \item 對於質數 $p$，$a^{p-1} \equiv 1 \pmod{p}$。
@@ -368,10 +369,10 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{{\secname}}
   競賽常用的演算法：\pause
   \begin{itemize}
-    \item 判斷 $n$ 是不是質數：Miller Rabin $ \implies \ord(\log^{\ord(1)}(n))$
+    \item 判斷 $n$ 是不是質數：Miller Rabin $ \implies \ord\big(\log^{\ord(1)}(n)\big)$
     \item 因數分解 $n$ ：Pollard's rho $ \implies \ord(n^{1/4})$
   \end{itemize}
 \end{frame}
@@ -428,14 +429,15 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
 
 \begin{frame}{\btitle{期望值}}
   \begin{problem}[Graph Game, Codeforces 235D]
-    現在有一個遊戲：
+    現在有一個遊戲： \pause
     \begin{enumerate}[<+->]
       \item 一開始的分數是 $0$，並且有一個 $n$ 個點的樹。
       \item 每次從剩下的點中隨機且等機率的選出一個點 $v$，並把分數加上 $v$ 所在的
         連通塊的大小，且把 $v$ 和與 $v$ 相鄰的邊全部刪掉。
       \item 一直進行到圖上沒有點為止。
-    \end{enumerate} \pause
+    \end{enumerate}
 
+    \onslide<+->
     問你得到的分數的期望值。
   \end{problem}
 \end{frame}
@@ -460,7 +462,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   $\implies p = 1/n$，$n$ 是 $u, v$ 間（包含）有幾個點。
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile]{\btitle{Pollard's rho}}
   \begin{minted}{cpp}
     int f(int x, int n) { return (x*x + 2) % n }
     int pollard_rho(int n) {
@@ -489,7 +491,7 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   \end{enumerate}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{Final}}
   \begin{problem}[An Easy Problem -- Subtask \#4, NTUJ 1423]
     給你 $b$, $c$, $p$，請你求 $a$ 使得 $a^b \equiv c \pmod{p}$。\\
     ($b, c, p \leq 10^9$, $p$ 是數且 $\gcd(b, p-1) \leq 10^5$)

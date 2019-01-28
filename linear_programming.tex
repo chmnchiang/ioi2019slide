@@ -3,8 +3,8 @@
 \begin{document}
 \section{線性規劃}
 
-\begin{frame}{{\secname}}
-  \begin{itemize}
+\begin{frame}{\btitle{例子}}
+  \begin{itemize}[<+->]
     \itemsep=1ex
     \item 你一天總共會做四件事情，分別是「打程式競賽」、「打手遊」、
       「吃飯」和「睡覺」。假設你分別在這件事情上花了 $x_1, x_2, x_3, x_4$ 小時。
@@ -13,9 +13,8 @@
     \item 有些行動會花錢 $\implies x_2 + 2x_3 \leq 6$。
     \item 你要最大化爽度 $\implies \text{maximize:}\ 2x_1 + x_2$。
   \end{itemize}
-\pause
 \end{frame}
-\begin{frame}{{\secname}}
+\begin{frame}{\btitle{例子}}
 \begin{overlayarea}{\textwidth}{3cm}
   \only<1>{
     \begin{equation*}
@@ -59,6 +58,7 @@
   \end{array}
 }
 \]
+\pause
 \begin{itemize}
   \item<+-> 原本的問題是要最小化 $\implies$ 將其取負號。 
   \item<+-> 等式限制 $\implies$ 拆成 $\geq,\, \leq$ 兩個不等式。
@@ -151,7 +151,7 @@
 \end{overlayarea}
 \end{frame}
 
-\begin{frame}{\btitle{Slack Form}}
+\begin{frame}{\btitle{Slack form}}
   \begin{columns}[t]
     \column{0.5\textwidth}
     \[
@@ -257,8 +257,8 @@
   \item 透過 Pivoting 讓 $\bm{b} \geq \bm{0}$
   \item 透過 Pivoting 讓 $\bm{c} \leq \bm{0}$
 \end{enumerate}
-\pause \bigskip
 
+\onslide<+->
 分別為 Simplex 的 phase 1, phase 2。
 \end{frame}
 
@@ -275,7 +275,7 @@
 \bigskip
 
 \visible<6->{
-  \alert<6>{Bland's rule} 保證遍歴的 Slack Form 不會重複。\\
+  \alert<6>{Bland's rule} 保證遍歴過的 Slack form 不會重複。\\
   $\implies$ 複雜度 ${n+m \choose m}$。\visible<7->{實際上遠比這個好。}
 }
 \end{frame}
@@ -516,19 +516,20 @@
 \begin{frame}{\btitle{例題}}
   \begin{problem}[Flood in Gridland, ICPC Dhaka Regional 2014]
   在一個 $m \times n$ 的格子上，每個格子不是無盡的深淵，就是一個高為 $h_{i, j}$ 的土地。
-  你現在可以做兩種操作：
+  你現在可以做兩種操作： \pause
 
-  \begin{enumerate}
+  \begin{enumerate}[<+->]
     \item 將某一列土地的高度全部增加 $x$ ($x \geq 0$)。
     \item 將某一行土地的高度全部減少 $x$ ($x \geq 0$)。
   \end{enumerate}
 
+  \onslide<+->
   深淵不會受到你的操作影響。你希望最後所有土地都在 $[L, U]$ 之間，並且
   所有土地的高度總和越大越好，請給出一組最佳解。（$1 \leq m, n \leq 75$）
   \end{problem}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{\btitle{例題}}
 \begin{flalign*}
 \linearprog{\sum R_i x_i + \sum C_j x_j}{
   \begin{array}[t]{rcll}

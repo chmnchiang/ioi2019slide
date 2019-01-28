@@ -110,7 +110,7 @@ __float128 c;
         int mid = (l+r) / 2;
         bool flag = []() {
             if (...) return true;
-        };
+        } ();
         if (...) l = mid+1;
         else r = mid;
     }
@@ -118,17 +118,20 @@ __float128 c;
 \end{frame}
 
 \begin{frame}[fragile]{\btitle{Lambda}}
+  \onslide<+->
   \begin{minted}[linenos=false]{cpp}
     sort(begin(vec), end(vec),
          [](int a, int b) { return a > b; });
   \end{minted}
 
+  \onslide<+->
   \begin{minted}[linenos=false]{cpp}
     [=x, &y] (int a, bool b) { ... };
   \end{minted}
 \end{frame}
 
 \begin{frame}[fragile]{\btitle{\texttt{C++} IO}}
+  \onslide<+->
   \begin{minted}[linenos=false]{cpp}
     ios_base::sync_with_stdio(0);
     cin.tie(0); // speed up
@@ -137,6 +140,7 @@ __float128 c;
     #define endl '\n'
   \end{minted}
 
+  \onslide<+->
   \begin{minted}[linenos=false]{cpp}
     for (int i=0; i<vec.size(); i++)
         cout << v[i] << " \n"[i == ((int)vec.size() - 1)];
@@ -197,12 +201,14 @@ void increase_stack_size() {
 \end{frame}
 
 \begin{frame}[fragile]{\btitle{static}}
+  \onslide<+->
   \begin{minted}[linenos=false]{cpp}
     static int C; // (1)
     static int f() { // (2)
         static A[30]; // (3)
     }
   \end{minted} 
+  \onslide<+->
   \begin{minted}[linenos=false]{bash}
     > g++ -O2 -Wall -Wextra -Wshadow -o a a.cpp
   \end{minted} 
@@ -251,22 +257,6 @@ void increase_stack_size() {
 \end{frame}
 
 \begin{frame}[fragile]{\btitle{找 Bug}}
-  \begin{minted}[]{cpp}
-    int minus(int a, int b) {
-        return a - b;
-    }
-    int input() {
-        int t;
-        cin << t;
-        return t;
-    }
-    int main() {
-        int a, b;
-        cout << minus(input(), input()) << endl;
-    }
-  \end{minted}
-\end{frame}
-\begin{frame}[fragile]{\btitle{找 Bug}}
   \[ \onslide<+->{\Expect[t_\text{AC}]\ = t_\text{\tiny 寫Code}}
   \onslide<+->{ + p_\text{\tiny 出bug} \big( \Expect[t_\text{\tiny 你debug}] }
   \onslide<+-> { + p_\text{\tiny 你 de 不出來} \Expect[t_\text{\tiny 隊友debug}] \big) } \]
@@ -275,12 +265,13 @@ void increase_stack_size() {
     \item<+-> 變數名稱取好一點。
     \item<+-> 空白多用一點。
   \end{itemize}
-  \pause
+  
 
-    \begin{minted}[linenos=false]{cpp}
-      LL mx[ 3 ] = {};
-      for( size_t i = 1 ; i < f[ 1 ].size() ; i ++ )
-          mx[ 1 ] = max( mx[ 1 ] , f[ 1 ][ i ] - f[ 1 ][ i - 1 ] );
-    \end{minted}
+  \onslide<+->
+  \begin{minted}[linenos=false]{cpp}
+    LL mx[ 3 ] = {};
+    for( size_t i = 1 ; i < f[ 1 ].size() ; i ++ )
+        mx[ 1 ] = max( mx[ 1 ] , f[ 1 ][ i ] - f[ 1 ][ i - 1 ] );
+  \end{minted}
 \end{frame}
 \end{document}
