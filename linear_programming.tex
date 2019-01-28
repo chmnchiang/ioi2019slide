@@ -1,0 +1,551 @@
+\documentclass[standalone]{beamer}
+
+\begin{document}
+\section{線性規劃}
+
+\begin{frame}{{\secname}}
+  \begin{itemize}
+    \itemsep=1ex
+    \item 你一天總共會做四件事情，分別是「打程式競賽」、「打手遊」、
+      「吃飯」和「睡覺」。假設你分別在這件事情上花了 $x_1, x_2, x_3, x_4$ 小時。
+    \item 一天有 24 小時 $\implies x_1 + x_2 + x_3 + x_4 \geq 0$。
+    \item 有些行動會消耗/補充體力 $\implies -2x_1 - x_2 + 3x_3 + x_4 \geq 3$。
+    \item 有些行動會花錢 $\implies x_2 + 2x_3 \leq 6$。
+    \item 你要最大化爽度 $\implies \text{maximize:}\ 2x_1 + x_2$。
+  \end{itemize}
+\pause
+\end{frame}
+\begin{frame}{{\secname}}
+\begin{overlayarea}{\textwidth}{3cm}
+  \only<1>{
+    \begin{equation*}
+      \linearprog{2x_1 \ + \ x_2}{
+        {
+          \arraycolsep=3pt
+          \begin{array}[t]{*4{rc}l}
+            x_1 & + & x_2 & + & x_3 & + & x_4 & \leq & 24 \\
+            -2x_1 & - & x_2 & + & 3x_3 & + & x_4 & \geq & 3 \\
+            &   & x_2 & + & 2x_3 &   & & \leq & 6 \\
+          \end{array}
+        }
+      }
+    \end{equation*} %
+  } %
+  \only <2> {
+    \begin{equation*}
+      \linearprog{2x_1 \ + \ x_2}{
+        {
+          \arraycolsep=3pt
+          \begin{array}[t]{*4{rc}l}
+            x_1 & + & x_2 & + & x_3 & + & x_4 & \leq & 24 \\
+            -2x_1 & - & x_2 & + & 3x_3 & + & x_4 & \geq & 3 \\
+            &   & x_2 & + & 2x_3 &   & & \leq & 6 \\
+            \multicolumn{7}{r}{\alert<2>{x_1,\ x_2,\ x_3,\ x_4}} & \alert<2>{\geq} & \alert<2>{0} \\
+          \end{array}
+        }
+      }
+    \end{equation*}
+  }
+ 
+\end{overlayarea}
+\end{frame}
+
+\begin{frame}{{\secname} -- 標準型式}
+\[
+\linearprog{\bm{c}^\mathsf{T} \bm{x}}{
+  \begin{array}[t]{rcl}
+    A\bm{x} & \leq & \bm{b} \\
+    \bm{x}  & \geq & \bm{0}
+  \end{array}
+}
+\]
+\begin{itemize}
+  \item<+-> 原本的問題是要最小化 $\implies$ 將其取負號。 
+  \item<+-> 等式限制 $\implies$ 拆成 $\geq,\, \leq$ 兩個不等式。
+  \item<+-> 「大於等於」 $\implies$ 取負號後即變為「小於等於」。
+  \item<+-| alert@+> 本來某個 $x_i$ 沒有 $x_i \geq 0$ 的限制 $\implies$ 替換 $x_i = x'_i - x''_i$
+    並設下 $x'_i, x''_i \geq 0$ 的限制即可。
+\end{itemize}
+\end{frame}
+
+\begin{frame}{{\secname} -- 標準型式}
+\begin{overlayarea}{\textwidth}{3cm}
+  \only<1>{
+    \[
+      \linearprog{2x_1 \ + \ x_2}{
+        {
+          \arraycolsep=3pt
+          \begin{array}[t]{*4{rc}l}
+            x_1 & + & x_2 & + & x_3 & + & x_4 & \leq & 24 \\
+            -2x_1 & - & x_2 & + & 3x_3 & + & x_4 & \geq & 3\phantom{-} \\
+            &   & x_2 & + & 2x_3 &   & & \leq & 6 \\
+            \multicolumn{7}{r}{x_1,\ x_2,\ x_3,\ x_4} & \geq & 0 \\
+          \end{array}
+        }
+      }
+    \]
+  } %
+  \only <2> {
+    \[
+      \linearprog{2x_1 \ + \ x_2}{
+        {
+          \arraycolsep=3pt
+          \begin{array}[t]{*4{rc}l}
+            x_1 & + & x_2 & + & x_3 & + & x_4 & \leq & 24 \\
+            \phantom{-}\alert<2>{2x_1} & \alert<2>{+} & \alert<2>{x_2} & \alert<2>{-} &
+            \alert<2>{3x_3} & \alert<2>{-} & \alert<2>{x_4} & \alert<2>{\leq} & \alert<2>{-3} \\
+            &   & x_2 & + & 2x_3 &   & & \leq & 6 \\
+            \multicolumn{7}{r}{x_1,\ x_2,\ x_3,\ x_4} & \geq & 0 \\
+          \end{array}
+        }
+      }
+    \]
+  }
+\end{overlayarea}
+\end{frame}
+
+\begin{frame}{\btitle{Slack form}}
+  現在對於一個限制
+  \[ \sum_j a_{i, j} x_j \leq b_i \]
+  定義 Slack variable
+  \[ x \defeq b_i - \sum_j a_{i, j} x_j \]
+  \pause
+
+  這個變數描述這個不等式差多少變等式。
+  \pause
+  \medskip
+
+  原不等式等價於 $x \geq 0$
+\end{frame}
+
+\begin{frame}{\btitle{Slack form}}
+\begin{overlayarea}{\textwidth}{3cm}
+  \only<1>{
+    \[
+      \linearprog{2x_1 \ + \ x_2}{
+        {
+          \arraycolsep=3pt
+          \begin{array}[t]{*4{rc}l}
+            x_1 & + & x_2 & + & x_3 & + & x_4 & \leq & 24 \\
+            2x_1 & + & x_2 & - & 3x_3 & - & x_4 & \leq & -3 \\
+            &   & x_2 & + & 2x_3 &   & & \leq & 6 \\
+            \multicolumn{7}{r}{x_1,\ x_2,\ x_3,\ x_4} & \geq & 0 \\
+          \end{array}
+        }
+      }
+    \]
+  } %
+  \only <2-> {
+    \[
+      \linearprog{2x_1 + x_2 + 0}{
+        \arraycolsep=3pt
+        \begin{array}[t]{lc*4{rc}r}
+          x_5 & = & 24 &-& x_1  &-& x_2 &-& x_3 &-& x_4  \\
+          x_6 & = & -3 &-& 2x_1 &-& x_2 &+& 3x_3 &+& x_4  \\
+          x_7 & = & 6&&  &-& x_2 &-& 2x_3 &&  \\
+          \bm{x} & \geq & \bm{0} & & & & & & & &
+      \end{array}
+      }
+    \]
+  }
+\end{overlayarea}
+\end{frame}
+
+\begin{frame}{\btitle{Slack Form}}
+  \begin{columns}[t]
+    \column{0.5\textwidth}
+    \[
+      \scalebox{0.8}{$
+      \linearprog{c_1 x_1 + \dots + c_n x_n + c_0}{
+        \arraycolsep=1pt
+        \begin{array}[t]{rc>{\displaystyle}lc>{\displaystyle}l}
+          x_{n+1} & = & b_{\alert<.->{n+1}} &-& \sum_{j=1}^n a_{\alert<.->{n+1}, j} \, x_j \\[15pt]
+          x_{n+2} & = & b_{\alert<.->{n+2}} &-& \sum_{j=1}^n a_{\alert<.->{n+2}, j} \, x_j \\
+          & \vdots &      & &                      \\
+          x_{n+m} & = & b_{\alert<.->{n+m}} &-& \sum_{j=1}^n a_{\alert<.->{n+m}, j} \, x_j \\[15pt]
+          x_i & \geq & \multicolumn{3}{l}{0 \quad\quad \forall i \in [1, m+n]} \\
+        \end{array}
+      }$}
+    \]
+    \pause
+    \column{0.5\textwidth}
+    
+    \begin{centering}
+      \begin{itemize}[<+->]
+        \itemsep=0.5ex
+        \item 左邊的 $x_{n+1}, \dots, x_{n+m}$ 叫作\emph{基礎變數} $B$。
+        \item 右邊的 $x_{1}, \dots, x_{n}$ 叫作\emph{非基礎變數} $N$。
+        \item 把所有 $x_i, i \in N$ 設成 $0$。
+        \item 對應到一組解 $x_i = b_i$, $i \in B$。
+        \item 這個解是\emph{可行解} $\iff \bm{b} \geq \bm{0}$。
+        \item 如果 $\bm{c} \leq \bm{0}$，這個解是\emph{最佳解}。
+      \end{itemize}
+    \end{centering}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{\btitle{Pivoting}}
+  假設我們的基礎解是一個可行解。
+  \visible<4->{\smallskip
+  
+  \alert<4>{$c_i \geq 0 \implies$ 增加 $x_i$ 會更好。}}
+  \pause
+  \medskip
+
+  \[
+    \small
+    \linearprog{\alert<4->{2x_1} + x_2 + 0}{
+      \arraycolsep=3pt
+      \begin{array}[t]{lc*4{rc}r}
+        {\color<5->{blue} x_5} & = & 24 &-& {\color<5->{blue} x_1} &-& x_2 &-& x_3 &-& x_4  \\
+        {\color<5->{blue} x_6} & = & \alt<3->{\phantom{-}3}{-3} &-& {\color<5->{blue} 2x_1} &-& x_2 &+& 3x_3 &+& x_4  \\
+        x_7 & = & 6&&  &-& x_2 &-& 2x_3 &&  \\
+        \bm{x} & \geq & \bm{0} & & & & & & & &
+      \end{array}
+    }
+  \]
+  \begin{columns}
+    \column{0.33\textwidth}
+    \visible <6-> {
+      可以增加多少？
+      \begin{enumerate}
+        \item $x_5$: $24 / 1 = 24$。
+        \item $x_6$: $3 / 2 = 1.5$。
+      \end{enumerate}
+    }
+
+    \column{0.66\textwidth}
+    \visible <7-> {
+      \begin{flalign*}
+        x_1 = \frac{3}{2} - \frac{1}{2} x_6 - \frac{1}{2} x_2 + \frac{3}{2} x_3 + \frac{1}{2} x_4 &&
+      \end{flalign*}
+      帶回每個式子。
+    }
+  \end{columns}
+\end{frame}
+
+\begin{frame}{\btitle{Pivoting}}
+\[
+  \linearprog{{\color<2->{green!70!black} 3} - {\color<2->{blue} x_6} + 3x_3 + x_4}{
+    \arraycolsep=3pt
+    \begin{array}[t]{lc*4{rc}r}
+      x_5 & = & \frac{45}{2} &+& \frac{1}{2} \color<2->{blue}{x_6} &-& \frac{1}{2} x_2 &-& \frac{5}{2} x_3 &-& \frac{1}{2} x_4 \\[5pt]
+      \alert<2->{x_1} & = & \frac{3}{2}  &-& \frac{1}{2} \color<2->{blue}{x_6} &-& \frac{1}{2} x_2 &+& \frac{3}{2} x_3 &+& \frac{1}{2} x_4 \\[5pt]
+      x_7 & = & 6&&  &-& x_2 &-& 2x_3 &&  \\[5pt]
+      \bm{x} & \geq & \bm{0} & & & & & & & &
+    \end{array}
+  }
+\]
+\pause
+
+把這個操作叫作 Pivoting。
+\pause
+做完 Pivoting，係數、$N$ 和 $B$ 會變，但與原本的等價。
+\end{frame}
+
+\begin{frame}{\btitle{Simplex}}
+\[
+\linearprog{\bm{c}^\mathsf{T} \bm{x}}{
+  \begin{array}[t]{rcl}
+    \bm{x}_B & = & \bm{b} - A \bm{x}_N \\
+    \bm{x}  & \geq & \bm{0}
+  \end{array}
+}
+\]
+\pause
+\begin{enumerate}[<+->]
+  \item 透過 Pivoting 讓 $\bm{b} \geq \bm{0}$
+  \item 透過 Pivoting 讓 $\bm{c} \leq \bm{0}$
+\end{enumerate}
+\pause \bigskip
+
+分別為 Simplex 的 phase 1, phase 2。
+\end{frame}
+
+\begin{frame}{\btitle{Simplex phase 1}}
+\begin{enumerate}[<+->]
+  \itemsep=1ex
+  \item 找一個 $x_s \in N$ 使得其對應的係數 $c_s > 0$。\action<6-| alert@6>{有多個找 $s$ 最小的。}
+  \item 對所有 $x_j \in B$ 如果 $A_{j, s} \geq 0$ 則 $\delta_j \defeq b_j / A_{j, s}$ 否則 $\delta_j \defeq \infty$。
+  \item 如果 $\min \delta_j = \infty$ 則回傳此線性規劃\emph{無界}，否則找 $x_t$ 使得 $\delta_t$ 最小。
+    \action<6-| alert@6>{有多個找 $t$ 最小的。}
+  \item 對 $x_s, x_t$ 做 Pivoting，得到新的 slack form。
+  \item 重複以上步驟直到 $c_s \leq \bm{0}$。
+\end{enumerate}
+\bigskip
+
+\visible<6->{
+  \alert<6>{Bland's rule} 保證遍歴的 Slack Form 不會重複。\\
+  $\implies$ 複雜度 ${n+m \choose m}$。\visible<7->{實際上遠比這個好。}
+}
+\end{frame}
+
+\begin{frame}{\btitle{Simplex phase 2}}
+  如何找一組可行解？
+  \pause
+
+  \[
+    \small
+    \linearprog{\alert<+->{- x_0}}{
+    \arraycolsep=3pt
+    \begin{array}[t]{rc>{\displaystyle}lc>{\displaystyle}lcl}
+      x_{n+1} & = & b_{n+1} &-& \sum_{j=1}^n a_{n+1, j} x_j &\alert<.->{+}& \alert<.->{x_0}\\
+      x_{n+2} & = & b_{n+2} &-& \sum_{j=1}^n a_{n+2, j} x_j &\alert<.->{+}& \alert<.->{x_0}\\
+              & \vdots     &                            \\
+      x_{n+m} & = & b_{n+m} &-& \sum_{j=1}^n a_{n+m, j} x_j &\alert<.->{+}& \alert<.->{x_0}\\[15pt]
+      x_i & \geq & \multicolumn{3}{l}{0 \quad\quad \forall i \in [1, m+n]} \\
+    \end{array}
+    }
+  \]
+\end{frame}
+
+\begin{frame}{\btitle{Simplex phase 2}}
+  可以證明如果 $b_t$ 是最小的，將 $x_0$, $x_t$ 做 Pivoting 後所有 $b_i \geq 0$。
+  \bigskip
+  \pause
+
+  $\implies$ 用 Phase 2 解！
+  \bigskip
+  \pause
+
+  \begin{enumerate}[<+->]
+    \item 將 slack form 加入變數 $x_0$ 並把目標函數換成 $-x_0$。
+    \item 令 $b_t \defeq \min b_i$，對 $x_0$ 和 $x_t$ 做一次 pivoting。
+    \item 用 phase 2 的方法解出這個線性規劃的最佳解，在過程中每做一次 pivoting 時也順便將原目標函數做
+      變數變換。
+    \item 如果修改後的線性規劃解出的最佳解不為 $0$ 則回傳\emph{無解}。
+    \item 否則有解，現在如果 $x_0 \in B$，則隨便找一個 $x_t \in N$ 滿足 $a_{0, t} \neq 0$。
+      對 $x_0$ 和 $x_t$ 做 pivoting 後用 phase 2 解。
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{\btitle{對偶}}
+  回顧一下之前的例子：
+  \begin{table}
+    \begin{tabular}{|l|c|c|c|c|}
+      \hline
+      & 爽度 & 時間 & 體力 & 金錢 \\ \hline
+      打程式競賽 & $+2$ & $-1$ & $-2$ & $0$ \\ \hline
+      打手遊 & $+1$ & $-1$ & $-1$ & $-1$ \\ \hline
+      吃飯 & $0$ & $-1$ & $+2$ & $-2$ \\ \hline
+      睡覺 & $0$ & $-1$ & $+1$ & $0$ \\ \hline
+    \end{tabular}
+  \end{table}
+  \pause
+  \bigskip
+
+  最佳解為打程式競賽 $9$ 小時、不玩手遊、吃飯 $3$ 小時然後睡覺 $12$ 小時。
+\end{frame}
+
+\begin{frame}{\btitle{對偶}}
+  \begin{itemize}[<+->]
+    \item 你遇到了一個惡魔要跟用滿足度交易「時間」、「體力」與「金錢」。
+    \item 雙方都不想吃虧。假設「時間」、「體力」與「金錢」分別值 $y_1$, $y_2$, $y_3$ 的滿足度。
+    \item 惡魔想要付你越少滿足度越好。
+    \item 你花 $1$ 單位的時間和 $2$ 單位的體力打程式競賽，本來就可以獲得 $2$ 單位
+的滿足度了，因此
+\[ y_1 + 2y_2 \geq 2 \]
+    \item 類似考慮其他行動還有 $3$ 條等式。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{\btitle{對偶}}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+    \begin{overlayarea}{\textwidth}{4cm}
+      \only<1>{
+        \[
+          \scalebox{0.8}{$
+          \linearprog{2x_1 \ + \ x_2}{
+            {
+              \arraycolsep=1pt
+              \begin{array}[t]{*4{rc}l}
+                x_1 & + & x_2 & + & x_3 & + & x_4 & \leq & 24 \\
+                {2x_1} & {+} & {x_2} & {-} &
+                {3x_3} & {-} & {x_4} & {\leq} & {-3} \\
+                &   & x_2 & + & 2x_3 &   & & \leq & 6 \\
+                \multicolumn{7}{r}{x_1,\ x_2,\ x_3,\ x_4} & \geq & 0 \\
+              \end{array}
+            }
+          }
+        $}
+      \]
+      }
+      \only<2>{
+        \vspace*{2.2ex}
+        \[
+          \scalebox{0.8}{$
+            \linearprog{\bm{c}^\mathrm{T} \bm{x}}{
+              {
+                \arraycolsep=2pt
+                \begin{array}[t]{rcl}
+                  A\bm{x} & \leq & \bm{b} \\
+                  \bm{x}  & \geq & \bm{0}
+                \end{array}
+              }
+            }
+          $}
+        \]
+      }
+    \end{overlayarea}
+    \end{column}
+    \vrule{}
+    \begin{column}{0.5\textwidth}
+    \begin{overlayarea}{\textwidth}{4cm}
+      \only<1>{
+      \[
+        \scalebox{0.8}{$
+          \linearprog[minimize]{24y_1 - 3y_2 + 6y_3}{
+            \arraycolsep=2pt
+            \begin{array}{*3{rc}r}
+              y_1 &+& 2y_2 & & &\geq& 1 \\
+              y_1 &+& y_2 &+& y_3 &\geq& 1 \\
+              y_1 &-& 3y_2 &+& 2y_3 &\geq& 0 \\
+              y_1 &-& y_2 & & &\geq& 0 \\
+              \multicolumn{5}{l}{y_1,\  y_2,\  y_3} & \geq & 0 
+            \end{array}
+          }
+        $}
+      \]
+      }
+      \only<2>{
+        \vspace*{2.2ex}
+        \[
+          \scalebox{0.8}{$
+            \linearprog[minimize]{\bm{b}^\mathrm{T} \bm{y}}{
+              {
+                \arraycolsep=2pt
+                \begin{array}[t]{rcl}
+                  A^\mathrm{T}\bm{y} & \geq & \bm{c} \\
+                  \bm{y}  & \geq & \bm{0}
+                \end{array}
+              }
+            }
+          $}
+        \]
+      }
+    \end{overlayarea}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{\btitle{對偶}}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+    \[
+      \scalebox{0.8}{$
+        \begin{array}{rl}
+          \text{maximize} & \kern 1em {\displaystyle \sum_{(u_i, v_j) \in E} x_{i, j}} \\[20pt]
+          \text{subject to} & {
+            \renewcommand\arraystretch{1.1}
+            \arraycolsep=2pt
+            \begin{array}[t]{>{\displaystyle}rcll}
+              \sum_{j: (u_i, v_j) \in E} x_{i, j} & \leq & 1, & \ \forall\, u_i \in V \\[15pt]
+              \sum_{i: (u_i, v_j) \in E} x_{i, j} & \leq & 1, & \ \forall\, v_j \in V \\
+              \bm{x}  & \geq & \bm{0}
+            \end{array}
+          }
+      \end{array}%
+      $}
+    \]
+    \end{column}
+    \vrule{}
+    \begin{column}{0.5\textwidth}<2->
+    \[
+      \scalebox{0.8}{$
+        \begin{array}{rl}
+          \text{minimize} & \kern 1em {\displaystyle \sum_{i} y_i + \sum_j y'_j} \\[20pt]
+          \text{subject to} & {
+            \renewcommand\arraystretch{1.1}
+            \arraycolsep=2pt
+            \begin{array}[t]{>{\displaystyle}rcll}
+              y_i + y'_j & \geq & 1, & \ \forall\, (u_i, v_j) \in E \\[15pt]
+              \bm{y}  & \geq & \bm{0}
+            \end{array}
+          }
+      \end{array}%
+      $}
+    \]
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{\btitle{對偶}}
+  \begin{theorem}
+    \begin{itemize}
+    \item 對偶問題的對偶即為原問題。
+    \item 如果 $\bar{\bm{x}}, \bar{\bm{y}}$ 分別是原問題和對偶問題的一組最佳解，則
+      \[ \bm{c}^\mathsf{T} \bar{\bm{x}} = \bm{b}^\mathsf{T} \bar{\bm{y}} \]
+    \end{itemize}
+  \end{theorem}
+\end{frame}
+
+\begin{frame}{\btitle{對偶}}
+  \begin{theorem}[Dual slackness]
+    $\bar{\bm{x}}, \bar{\bm{y}}$ 是原問題和對偶問題的一組最佳解若且唯若對每個 $i \in [1, n]$，
+      \[
+        x_i = 0 \quad \text{和} \quad \sum_{j=0}^m a_{j, i} y_j = c_i \label{eq:linear-programming-dual-slackness-1}
+      \]
+      中至少有一者成立，且對所有 $j \in [1, m]$，
+      \[
+        y_j = 0 \quad \text{和} \quad \sum_{i=0}^n a_{i, j} x_i = b_j \label{eq:linear-programming-dual-slackness-2}
+      \]
+      中至少有一者成立。
+  \end{theorem}
+\end{frame}
+
+\begin{frame}{\btitle{對偶}}
+  \begin{proof}
+    由
+    \[
+      \bm{c}^\mathsf{T} \bar{\bm{x}}
+      \stackrel{(1)}{\leq} (A^\mathsf{T} \bar{\bm{y}})^\mathsf{T} \bar{\bm{x}}
+      = \bar{\bm{y}}^\mathsf{T} (A \bar{\bm{x}})
+      \stackrel{(2)}{\leq} \bar{\bm{y}}^\mathsf{T} \bm{b} = \bar{\bm{b}}^\mathsf{T} \bm{y}
+    \]
+    \pause
+    等式成立若且唯若 (1) 和 (2) 的等式都成立，從 (1) 我們得出
+    \[ \sum_{i = 0}^n \left( -c_i + \sum_{j = 0}^m a_{j, i} y_j \right) x_i = 0 \]
+    \pause
+
+    但因為 $\left( -c_i + \sum_{j = 0}^m a_{j, i} y_j \right)$ 和 $x_i$ 皆大於等於 $0$，因此
+    \[ x_i = 0 \ \ \text{或}\ \ \sum_{j = 0}^m a_{j, i} y_j = c_i, \ \forall \, i \]
+  \end{proof}
+\end{frame}
+
+\begin{frame}{\btitle{例題}}
+  \begin{problem}[Flood in Gridland, ICPC Dhaka Regional 2014]
+  在一個 $m \times n$ 的格子上，每個格子不是無盡的深淵，就是一個高為 $h_{i, j}$ 的土地。
+  你現在可以做兩種操作：
+
+  \begin{enumerate}
+    \item 將某一列土地的高度全部增加 $x$ ($x \geq 0$)。
+    \item 將某一行土地的高度全部減少 $x$ ($x \geq 0$)。
+  \end{enumerate}
+
+  深淵不會受到你的操作影響。你希望最後所有土地都在 $[L, U]$ 之間，並且
+  所有土地的高度總和越大越好，請給出一組最佳解。（$1 \leq m, n \leq 75$）
+  \end{problem}
+\end{frame}
+
+\begin{frame}
+\begin{flalign*}
+\linearprog{\sum R_i x_i + \sum C_j x_j}{
+  \begin{array}[t]{rcll}
+    x_i - x'_j & \leq & U - h_{i, j}, \quad & \text{對所有不是深淵的 $(i, j)$} \\
+    - x_i + x'_j & \leq & h_{i, j} - L, \quad & \text{對所有不是深淵的 $(i, j)$} \\
+    x_i, x'_j & \geq & 0, & \forall\, i, j
+  \end{array}
+} &&
+\end{flalign*}
+\hrule{}
+\onslide<2->{\begin{flalign*}
+  \linearprog[minimize]{\sum_{i, j} (U - h_{i, j}) y_{i,j} + (h_{i, j} - L) y'_{i,j}}{
+  \begin{aligned}[t]
+    \sum_j y_{i, j} - y'_{i, j} & \geq R_i, & \quad & \forall i \in [1, m] \\
+    \sum_i - y_{i, j} + y'_{i, j} & \geq -C_j, & \quad & \forall i \in [1, n] \\
+  \end{aligned}
+} &&
+\end{flalign*}}
+\end{frame}
+\end{document}

@@ -1,0 +1,424 @@
+\documentclass[standalone]{beamer}
+
+\begin{document}
+\section{捲積}
+
+\begin{frame}{\btitle{目的}}
+  形如
+  \[ c_k = \sum_{k = f(i, j)} a_i b_j \]
+  的和，應用：
+  \pause
+  \disskip
+  \begin{itemize}[<+->]
+    \item 多項式乘法
+    \item 大數乘法
+    \item 組合計數 DP
+  \end{itemize}
+
+  \pause
+  一般時間複雜度 $\ord(n^2)$。
+\end{frame}
+
+\begin{frame}{\btitle{多項式乘法}}
+  令
+  \begin{align*}
+    f(x) &= a_0 + a_1 x + \dots + a_{n-1} x^{n-1}, \\
+    g(x) &= b_0 + b_1 x + \dots + b_{n-1} x^{n-1}, \\
+    f(x)g(x) &= c_0 + c_1 x + \dots + c_{2n-1} x^{2n-1}
+  \end{align*}
+  \pause
+  \[ c_k = \sum_{\color{red}{k = i+j}} a_i b_j \]
+\end{frame}
+
+\begin{frame}{\btitle{Karatsuba algorithm}}
+假設 $f, g$ 皆為 $2n-1$ 次的多項式，也就是 
+\[ f(x) \defeq a_0 + a_1 x + \dots + a_{2n-1}x^{2n-1} \]
+\pause
+令 
+\begin{align*}
+  f_1(x) &\defeq a_0 + a_1 x + \dots + a_{n-1} x^n \\
+  f_2(x) &\defeq a_n + a_{n+1} x + \dots + a_{2n-1} x^n
+\end{align*}
+\pause
+可以知道 $f(x) = f_1(x) + x^n f_2(x)$，類似的定義 $g_1, g_2$ 使得 $g(x) = g_1(x) + x^n g_2(x)$，
+則
+\begin{align*}
+  f g &= f_1 g_1 + x^n (f_1 g_2 + f_2 g_1) + x^{2n} f_2 g_2 \\
+  &= {\color<+(1)->{red}f_1 g_1} + x^n \big(
+  {\color<.->{green!60!black}(f_1 + f_2)(g_1 + g_2)} - {\color<.->{red}f_1 g_1} - {\color<.->{blue}f_2 g_2}\big) 
+  + x^{2n} {\color<.->{blue}f_2 g_2}
+\end{align*}
+\end{frame}
+
+\begin{frame}{\btitle{Karatsuba algorithm}}
+  只要算三個長度一半的多項式乘積。
+  \pause
+
+  複雜度：
+  \[ T(n) = 3T(n/2) + \ord(n) \implies T(n) = \ord\left(n^{\log_2 3}\right) \]
+  \pause
+  實作上要跑的快常數小要注意：%
+  \disskip
+  \begin{itemize}
+    \item 如果用 \cppinline{std::vector} 請用 \cppinline{std::vector::reserve}。
+    \item 還是建議自己弄個 buffer。
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{\btitle{摸都嗨呀苦}}
+  $n$ 個點 $(x, y)$ 決定了一個多項式，我們的夢想是這樣的：
+  \pause
+
+  \begin{enumerate}[<+->]
+    \item \alert<6>{用 $(x_1, f(x_1)), (x_2, f(x_2)), \dots, (x_n, f(x_n))$ 表示 $f$。}
+    \item 同樣的用 $(x_1, g(x_1)), (x_2, g(x_2)), \dots, (x_n, g(x_n))$ 表示 $g$。
+    \item 那 $(x_1, f(x_1)g(x_1)), \dots, (x_n, f(x_n)g(x_n))$ 就表示 $f \cdot g$。\\
+      \alert<.>{只要 $n$ 次乘法！}
+    \item 再反推的 $f \cdot g$。
+  \end{enumerate}
+  \action<6-| alert@6>{光這一步就要 $\ord(n^2)$！}
+  
+  \onslide<7>{找的 $x_1, x_2, \dots, x_n$ 要夠好。}
+\end{frame}
+
+\def\myaddv{\vphantom{\omega_n^{()}}}
+\begin{frame}
+  找 $x_k = \omega_n^k, \, 0 \leq k < n$，其中 $\omega_n \defeq \ex^{2 \pi \img / n}$。\\
+  \pause
+  現在 $f(x_k) = a_0 + a_1 \omega_n^k + a_2 \omega_n^{2k} + \dots + a_{n-1} \omega_n^{(n-1)k}
+  \alert<2>{= \sum_{i=0}^{n-1} a_i \omega_n^{ik}}$。
+  \pause
+
+  也可寫成
+  \[ 
+    \begin{bmatrix}
+      f(x_0) \\ f(x_1) \myaddv \\ f(x_2) \myaddv \\ \vdots \\ f(x_{n-1}) \myaddv
+    \end{bmatrix}
+    = 
+  \begin{bmatrix}
+    1 & 1 & 1 & \cdots & 1 \\
+    1 & \omega_n^{1} & \omega_n^{2} & \cdots & \omega_n^{(n-1)} \\
+    1 & \omega_n^{2} & \omega_n^{4} & \cdots & \omega_n^{(2n-2)} \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    1 & \omega_n^{(n-1)} & \omega_n^{(2n-2)} & \cdots & \omega_n^{(n^2-1)} \\
+  \end{bmatrix}
+    \begin{bmatrix}
+      a_0 \\ a_1 \myaddv \\ a_2 \myaddv \\ \vdots \\ a_n \myaddv
+    \end{bmatrix}
+  \]
+  \pause
+  把 $(f(x_0), \dots, f(x_{n-1}))$ 稱作 $A = (a_0, \dots, a_{n-1})$ 的\emph{離散傅立葉變換} $\mathcal{F}^n(A)$。
+\end{frame}
+\def\aat #1#2{\action<alert@#1>{#2}}
+%\def\oclbb #1#2{\omega_{\textcolor{blue}{#1}}^{\textcolor{blue}{#2}}}
+%\begin{frame}
+  %如果 $n = 2m$
+  %{
+  %\[ 
+  %\scalebox{0.85}{$\displaystyle
+    %\begin{bmatrix}
+      %\aat{2-3}{f(x_0)} \\ \aat{2-3}{f(x_1)} \myaddv \\ \aat{2-3}{f(x_2)} \myaddv \\ \vdots \\ \aat{2-3}{f(x_{m-1})} \myaddv \\ \vdots 
+    %\end{bmatrix}
+    %= 
+  %\begin{bmatrix}
+    %\aat{2-3}{1} & 1 & \aat{2-3}{1} & \cdots & \aat{2-3}{1} & 1 \\
+    %1 & \omega_n^{1} & \omega_n^{2} & \cdots & \omega_n^{(n-2)} & \omega_n^{(n-1)} \\
+    %\aat{2-3}{1} & \omega_n^{2} & \aat{2-3}{\alt<3->{\oclbb{m}{2}}{\omega_n^{4}}} & \cdots & \aat{2-3}{\omega_n^{(n-4)}} & \omega_n^{(2n-2)} \\
+    %\vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+    %\aat{2-3}{1} & \omega_n^{(n-2)} & \aat{2-3}{\alt<3->{\oclbb{m}{1}}{\omega_n^{2(n-2)}}} & \cdots & \aat{2-3}{\omega_n^{(n-2)(n-2)}} & \omega_n^{(n-1)(n-2)} \\
+    %\vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+  %\end{bmatrix}
+  %{
+    %\begin{bmatrix}
+      %\aat{2-3}{a_0} \\ a_1 \myaddv \\ \aat{2-3}{a_2} \myaddv \\ \vdots \\ \aat{2-3}{a_{n-2}} \myaddv \\ a_{n-1} \myaddv
+    %\end{bmatrix}
+  %}
+  %$}
+  %\]
+  %}
+%\end{frame}
+
+\begin{frame}[fragile]
+  \begin{python}[./genarr.py]
+  \end{python}
+  \[
+    \action<2-| alert@2>{\mathcal{F}(A)_k}
+    \action<3-| alert@3>{ = \mathcal{F}(\tikz[baseline, remember picture]{\node[overlay node] (_conv_E) {$E$}})_k}
+    \action<5-| alert@5>{+\omega_n^{k} \mathcal{F}(\tikz[baseline, remember picture]{\node[overlay node] (_conv_O) {$O$}})_k}
+  \]
+  \begin{tikzpicture}[overlay, remember picture]
+    \path<4->[->] ($(_conv_E.south)+(-0.4, -0.6)$) edge[bend right]
+      ($(_conv_E.south)-(0, 0.1)$) node[left]{\ofootnotesize 偶數項} ;
+    \path<3>[->,red] ($(_conv_E.south)+(-0.4, -0.6)$) edge[bend right]
+      ($(_conv_E.south)-(0, 0.1)$) node[left]{\ofootnotesize 偶數項} ;
+    \path<5->[->,red] ($(_conv_O.south)+(0.4, -0.6)$) edge[bend left]
+      ($(_conv_O.south)-(0, 0.1)$) node[right]{\ofootnotesize 奇數項} ;
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+\begin{alignat*}{2}
+  \onslide<+->{F(A)_k &= \sum_{j=0}^{n-1} \omega_n^{jk} A_j &&} \\
+  \onslide<+->{&= \sum_{j=0}^{n-1} \ex^{2 \pi \img j k / n} A_j && \\}
+  \onslide<+->{&= \sum_{j=0}^{m-1} \ex^{2 \pi \img \cdot (2j) \cdot k / n} A_{2j} &&\ + \  
+  \sum_{j=0}^{m-1} \ex^{2 \pi \img \cdot (2j + 1) \cdot k / n} A_{2j+1}} \\
+  \onslide<+->{&= \sum_{j=0}^{m-1} \ex^{2 \pi \img j k / m} E_{j} &&\ + \  
+  \ex^{2 \pi \img k / n} \sum_{j=0}^{m-1} \ex^{2 \pi \img jk / m} O_{j}} \\
+  \onslide<+->{&= \fourier(E)_{\alert<.->{k \bmod{m}}} &&\ + \ \ex^{2 \pi \img k / n} \fourier(O)_{\alert<.->{k \bmod{m}}}}
+\end{alignat*}
+\end{frame}
+
+\begin{frame}
+  複雜度：
+  \[ T(n) = 2 T(n/2) + \ord(n) \]
+  \pause
+  \[ \implies T(n) = \ord(n \log n) \]
+\end{frame}
+
+\begin{frame}
+  前面的「夢想」：
+  \disskip
+  \begin{enumerate}
+    \setcounter{enumi}{2}
+    \item 那 $(x_1, f(x_1)g(x_1)), \dots, (x_n, f(x_n)g(x_n))$ 就表示 $f \cdot g$。\\
+      \alert<.>{只要 $n$ 次乘法！}
+  \end{enumerate}
+  \pause
+
+  其怪？ $f \cdot g$ 不是應該是 $2n+1$ 次多項式嗎？
+  \pause
+
+  我們其實是計算
+  \[ c_k \defeq \sum_{\alert<.->{k \equiv i + j \operatorname{mod} n}} a_i b_j \]
+  適當的在前面補 $0$ 還是可以計算多項式乘法！
+\end{frame}
+
+\begin{frame}
+  \begin{enumerate}
+    \item \alt<2->{計算 $\fourier(A)$。\  ($\ord(n \log n)$ $\textcolor{mgreen}{\checkmark}$)}{
+        用 $(x_1, f(x_1)), (x_2, f(x_2)), \dots, (x_n, f(x_n))$ 表示 $f$。}
+    \item \alt<3->{計算 $\fourier(B)$。\  ($\ord(n \log n)$ $\textcolor{mgreen}{\checkmark}$)}{
+        用 $(x_1, g(x_1)), (x_2, g(x_2)), \dots, (x_n, g(x_n))$ 表示 $g$。}
+    \item \alt<4->{計算 $\fourier(C) = \fourier(A) \odot \fourier(B)$。\ ($\ord(n)$ $\textcolor{mgreen}{\checkmark}$)}{
+        計算 $(x_1, f(x_1)g(x_1)), \dots, (x_n, f(x_n) g(x_n))$ 表示 $f \cdot g$。}
+    \item \alt<5->{計算 $C = \fourier^{-1}(\fourier(C))$。\ \alt<8>{($\ord(n \log n)$ $\textcolor{mgreen}{\checkmark}$)}{\textcolor{red}{?}}}{反推 $f \cdot g$。}
+  \end{enumerate}
+
+  \begin{theorem}<6->
+    如果 $\fourier(A) = B$，則
+    \[ A_k = \alert<6>{\frac{1}{n}} \sum_{j=0}^{n-1} \omega_n^{\alert<6>{- j k}} B_j \]
+    %= \frac{1}{n}\sum_j \omega^{kj} B_j = \frac{1}{n} \sum_j (\overline\omega)^{-kj} B_j \]
+    %其中 $\overline\omega_n = \ex^{- 2 \pi \im / n}$。
+  \end{theorem}\disskip
+  \onslide<7>{和正變換一樣，只要將 $\omega \to \omega^{-1}$}
+\end{frame}
+
+\begin{frame}[fragile]
+  和 Karatsuba algorithm 一樣，要實作上效率高需要巧思。
+
+  \begin{minted}[autogobble, escapeinside=αα]{cpp}
+void fft(int n, cplx a[], bool inv=false)
+{
+    int i = 0;
+    for (int j = 1; j < n - 1; j++) {
+        for (int k = n >> 1; k > (i ^= k); k >>= 1);
+        if (j < i) swap(a[α\tikzmark{fft_i_start}αiα\tikzmark{fft_i_end}α], a[j]);
+    }
+    // ...
+  \end{minted}
+  \pause
+
+  Question: 這個 \tikz[baseline, remember picture]{\node[overlay node] (fft_i_ques){\texttt{i}}} 依序是多少？
+  \begin{tikzpicture}[remember picture, overlay]
+    \node<2> [fill=cyan, fill opacity=0.2, circle, yshift=2,
+    fit={(pic cs:fft_i_start) (pic cs:fft_i_end)}] {};
+    \node (fft_i) [circle, yshift=2, fit={(pic cs:fft_i_start) (pic cs:fft_i_end)}] {};
+    \path<2>[-latex, thick] (fft_i_ques.north) ++ (0, 0.1) edge[out=80,in=260] (fft_i);
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}[autogobble, escapeinside=αα]{cpp}
+double d = inv ? 1 : -1;
+for (int m = 2; m <= n; m <<= 1) {
+    int mh = m >> 1;
+    for (int j = 0; j < mh; j++) {
+        cplx w = exp(cplx(0, d * PI * j / mh));
+        for (int k = j; k < n; k += m) {
+            int l = k + mh;
+            cplx x = a[k] - w*a[l];
+            a[k] = a[k] + w*a[l];
+            a[l] = x;
+        }
+    }
+}
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{problem}[經典問題]
+    有 $n$ 個技能 $m$ 個人，每個人都會這 $n$ 個技能中的某一些。如果 $B$ 會的所有技能 $A$
+    也會，那我們就說 $A$ 完全贏過 $B$。對每個人輸出他完全贏過多少人（包含自己）。
+    ($1 \leq n \leq 25$, $m \leq 10^6$)
+  \end{problem}
+  \pause \disskip
+  你說這還不簡單： \disskip
+  \begin{minted}{cpp}
+for (int i = 0; i < (1<<n); i++) {
+    for (int j: j | i == i) {
+        dp[i] += cnt[j];
+    }
+}
+\end{minted}
+\pause \disskip
+「你開心地想要直接揍他，一揍下去不得了痛死了，你像成龍一樣甩手時發現 \alert<.->{$n = 25$}。」
+\footnote{引用自 2017 年 IOI-Camp 捲積講義}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{cpp}
+for (int k = 0; k < n; k++) {
+    for (int i = 0; i < (1<<n); i++) {
+        dp[k+1][i] = dp[k][i]; // 約定 dp[0][i] = cnt[i]
+        if (i & (1 << k))
+            dp[k+1][i] += dp[k][i ^ (1<<k)];
+    }
+}
+\end{minted}
+\pause \disskip
+\cppinline{dp[k+1][i]} 表示「假設你會的技能的集合為 $i$，則你完全贏過，且你多會的技能只有在前 $k+1$ 個技能當中」的人數。
+\pause
+\disskip
+\begin{enumerate}[<+->]
+  \item 如果他\alert<.->{會}技能 $k$ 但你會 $\implies$ 他不會更前面的技能 \\
+    $\implies$ 在 \cppinline{dp[k][i]} 算過。
+  \item 如果他\alert<.->{不會}技能 $i$ 但你會 $\implies$ 在 \cppinline{dp[k-1][i]}算過
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{\btitle{變換}}
+  考慮多項式
+  \[ F(x_1, \dots, x_n) = \sum_{I = \{i_1, \dots, i_k\} \subseteq [n]} a_I x_{i_1} x_{i_2} \cdots x_{i_k}
+  = \sum_{I \subseteq [n]} a_I x_I \]
+  $a_I$ 表示會的技能的集合為 $I$ 的人數。
+
+  我們最後會得到一個新的多項式：
+  \[ \tilde{F}(x_1, \dots, x_n) \defeq \sum_{I \subseteq [n]} \left( \sum_{J \subseteq I} a_J \right) x_I \]
+\end{frame}
+
+%\begin{frame}{\btitle{另一種看法}}
+  %注意到
+  %\[ E(x_1, \dots, x_n) = \sum_{I = \subseteq [n]} x_{i_1} x_{i_2} \cdots x_{i_k}
+  %= (1 + x_1) (1 + x_2) \cdots (1 + x_n) \]
+  %\pause
+  %因此
+  %\[ F(x_1, \dots, x_n) E(x_1, \dots, x_n) = F(x_1, \dots, x_n) (1+x_1)(1+x_2) \cdots (1+x_n) \]
+%\end{frame}
+
+\begin{frame}{\btitle{又一個捲積}}
+  \begin{problem}[Two Swords Style, {\small Weekly Training Farm 16 pB}]
+    給你 $a_0, a_1, \dots, a_{2^n-1}$，$b_0, b_1, \dots, b_{2^n-1}$，
+    請你求出
+    \[ c_k \defeq \sum_{k = i \texttt{|} j} a_i b_j \]
+    對所有 $0 \leq k < 2^n$，其中 \texttt{|} 表示 bit OR。 ($n \leq 25$)
+  \end{problem}
+  硬揍下去 $\ord(2^{2n})$。
+\end{frame}
+
+\begin{frame}{\btitle{做法}}
+  \begin{enumerate}[<+->]
+    \item 把每個數看成集合：如果 $x$ 在 $i_1, i_2, \dots, i_k$ 的 bit 為 $1$，則對應到
+      $\{i_1, i_2, \dots, i_k\}$。
+    \item 我們改成計算
+      \[ \tilde{c}_x = \sum_{y \subseteq x} c_y \]
+    \item 容易知道
+      \[ \tilde{c}_x = \left(\sum_{y \subseteq x} a_y\right) \left(\sum_{y \subseteq x} b_y\right)\]
+    \item 再用排容從 $\tilde{c}$ 得出 $c$。
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{\btitle{另一種看法}}
+  假設我們多項是的變數在 $\mathbb{F}_2$ 下，也就是 $x_i^2 = x_i$。令
+    \[ F(\bm{x}) = \sum a_I \bm{x}_I,\ G(\bm{x}) = \sum a_I \bm{x}_I \]
+  \pause
+
+  我們要求的其實就是
+  \[ F(\bm{x}) G(\bm{x}) = \sum_K \sum_{I \texttt{|} J = K} a_I b_J x_K \]
+\end{frame}
+
+\begin{frame}{\btitle{另一種看法}}
+  \begin{enumerate}[<+->]
+    \item 令
+      \[ F(\bm{x}) = \sum a_I \bm{x}_I,\ G(\bm{x}) = \sum b_I \bm{x}_I \]
+    \item 換成點值，$F(y)$ 表示「如果 $t \in y$ 則 $x_t = 1$，否則 $x_t = 0$」代入後的值。 
+      \[ F(\bm{x}) \longleftrightarrow (F(0), F(1), \dots, F(2^n-1)) \]
+    \item 計算點值相乘
+      \[ (F(0)G(0), F(1)G(1), \dots, F(2^n-1) G(2^n-1)) \]
+    \item 反推回去 $F(\bm{x})G(\bm{x})$。
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{\btitle{另一種看法}}
+  點值其實等於
+  \[ F(x) = \sum_{y \subseteq x} a_y \]
+  \pause
+  有
+  \[ \sum_{I \subseteq [n]} F(x) \tilde{\bm{x}}_I = \sum_{I \subseteq [n]} \left(\sum_{J \subseteq I} a_J\right) \tilde{\bm{x}}_I \]
+  \pause
+  這就是我們在「技能問題」中說的變換！
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{另一種看法}}
+  逆變換也很簡單：
+  \begin{minted}{cpp}
+for (int k = n-1; k >= 0; k--) {
+for (int i = (1<<n)-1; i >= 0; i--) {
+        dp[k][i] = dp[k+1][i];
+        if (i & (1 << k))
+            dp[k][i] -= dp[k][i ^ (1<<k)];
+    }
+}
+\end{minted}
+\end{frame}
+
+\begin{frame}{\btitle{舉一反三}}
+  \begin{problem}[經典問題]
+    給你 $a_0, a_1, \dots, a_{2^n-1}$，$b_0, b_1, \dots, b_{2^n-1}$，
+    請你求出
+    \[ c_k \defeq \sum_{k = i \oplus j} a_i b_j \]
+    對所有 $0 \leq k < 2^n$，其中 $\oplus$ 表示 bit \alert<.->{XOR}。 ($n \leq 25$)
+  \end{problem}
+\end{frame}
+
+\begin{frame}{\btitle{舉一反三}}
+  剛剛我們需要 $x^2 = x$，所以代值 $\{0, 1\}$。
+  \pause
+
+  現在我們需要 $x = x^{-1}$，代值 $\{-1, 1\}$。 \\
+  也就是說我們改求點值
+  \[ F(\bm{x}) \longleftrightarrow (F(0), F(1), \dots, F(2^n-1)) \] \pause
+  其中 $F(y)$ 表示「如果 $t \in y$ 則 $x_t = \alert<.->{-1}$，否則 $x_t = \alert<.->{1}$」代入後的值。 
+\end{frame}
+
+\begin{frame}{\btitle{舉一反三}}
+  令 $F(\bm{x}) = F_0(x_2, x_3, \dots, x_{n-1}) + F_1(x_2, x_3, \dots, x_{n-1}) x_1$，
+  且 $I' = I \setminus \{1\}$
+  \begin{alignat*}{2}
+    \tilde{F}(\bm{x}) &= \sum_{I \subseteq [n]} F(I) x_I && \\
+    &= \sum_{1 \not\in I} F(I) x_I &&+ \sum_{1 \in I} F(I) x_I \\
+    &= \sum_{1 \not\in I} (F_0(I') + F_1(I')) x_I &&+ \sum_{1 \in I} (F_0(I') - F_1(I')) x_I \\
+    &= \sum_{1 \not\in I} (F_0 + F_1)(I') x_I &&+ \sum_{1 \in I} (F_0 - F_1)(I') x_I
+  \end{alignat*}
+  遞迴下去 $T(n) = 2T(n) + \ord(n) \implies T(n) = \ord(n \log n)$
+\end{frame}
+
+\begin{frame}{\btitle{習題}}
+  這個變換又叫作 Walsh–Hadamard transform。
+  \begin{exercise}
+    \begin{enumerate}
+      \item 找出 Walsh–Hadamard transform 的逆變換。
+      \item 寫出 inplace 的 Walsh–Hadamard transform。
+    \end{enumerate}
+  \end{exercise}
+\end{frame}
+\end{document}

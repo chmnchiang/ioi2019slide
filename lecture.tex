@@ -1,0 +1,210 @@
+%&<tex>
+\documentclass[notheorems,xcolor=dvipsnames]{beamer}
+\usetheme{Rochester}
+%\usefonttheme{serif}
+
+%\usepackage[hmargin=2.5cm, vmargin=2cm]{geometry}
+\usepackage{amssymb, mathtools, yhmath, graphicx}
+\usepackage{standalone}
+\usepackage[most]{tcolorbox}
+%\usepackage{fontspec, type1cm, titlesec, titling, fancyhdr, tabularx}
+%\usepackage{unicode-math}
+\usepackage{float}
+\usepackage{transparent}
+\usepackage[normalem]{ulem}
+\usepackage{bm}
+\usepackage{array}
+
+%\usepackage{eulervm}
+
+\usepackage{xpatch}
+\usepackage{relsize}
+\usepackage{scalerel}
+\usepackage{stackengine}
+\usepackage{gauss}
+%\usepackage[abbreviations, per-mode=symbol]{siunitx}
+\usepackage[CheckSingle, CJKmath]{xeCJK}
+\usepackage{fontspec}
+\defaultfontfeatures{Mapping=tex-text}
+\usefonttheme{professionalfonts}
+\usepackage{concmath}
+%\usepackage{CJKulem}
+%\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{calc, fit}
+\usetikzlibrary{tikzmark}
+\tikzset {
+  overlay node/.style={
+    anchor=base, outer sep=0mm, inner sep=0mm,
+  }
+}
+\usepackage{minted}
+\usepackage{python}
+\definecolor{mgray}{rgb}{0.85, 0.85, 0.85}
+\colorlet{mgreen}{green!70!black}
+\newmintinline{cpp}{bgcolor=mgray}
+\def\codesize{\fontsize{9}{12}\selectfont}
+\setmonofont{Source Code Pro}
+%\setmonofont[Contextuals={Alternate}]{Fira Code}
+\setminted{fontsize=\codesize, linenos, frame=lines, mathescape}
+%\usemintedstyle{monokai}
+%\usepackage{circuitikz}
+%\setCJKmainfont[BoldFont=cwTex Q Hei]{cwTex Q Ming}
+%\setCJKsansfont[BoldFont=cwTex Q Hei]{cwTex Q Ming}
+%\setCJKmonofont[BoldFont=cwTex Q Hei]{cwTex Q Ming}
+\setCJKmainfont[AutoFakeSlant,BoldFont=Source Han Sans TW Bold]{Noto Sans CJK TC}
+\newfontfamily\SHSTW{Source Han Sans TW}
+
+\def\ofootnotesize{\fontsize{8}{12}}
+\def\footnotesize{\fontsize{6}{8}\selectfont}
+%\def\normalsize{\fontsize{12}{18}\selectfont}
+%\def\large{\fontsize{14}{21}\selectfont}
+%\def\Large{\fontsize{16}{24}\selectfont}
+%\def\LARGE{\fontsize{18}{27}\selectfont}
+%\def\huge{\fontsize{20}{30}\selectfont}
+
+%\titleformat{\section}{\bf\Large}{\arabic{section}}{24pt}{}
+%\titleformat{\subsection}{\large}{\arabic{subsection}.}{12pt}{}
+%\titlespacing*{\subsection}{0pt}{0pt}{1.5ex}
+
+%\usepackage{parskip}
+%\parindent=24pt
+%\parskip=1em
+
+\setlength{\parskip}{\baselineskip} 
+\usepackage{trimclip}
+\DeclareRobustCommand\Longrightarrow{\NewRelbar\joinrel\Rightarrow}
+\DeclareRobustCommand\Longleftarrow{\Leftarrow\joinrel\NewRelbar}
+
+\makeatletter
+\DeclareRobustCommand\NewRelbar{%
+  \mathrel{%
+    \mathpalette\@NewRelbar{}%
+  }%
+}
+\newcommand*\@NewRelbar[2]{%
+  % #1: math style
+  % #2: unused
+  \sbox0{$#1=$}%
+  \sbox2{$#1\Rightarrow\m@th$}%
+  \sbox4{$#1\Leftarrow\m@th$}%
+  \clipbox{0pt 0pt \dimexpr(\wd2-.6\wd0) 0pt}{\copy2}%
+  \kern-.2\wd0 %
+  \clipbox{\dimexpr(\wd4-.6\wd0) 0pt 0pt 0pt}{\copy4}%
+}
+\makeatother
+
+
+
+\newcommand{\img}{\mathsf{i}}
+\newcommand{\ex}{\mathsf{e}}
+\newcommand{\dD}{\mathrm{d}}
+\newcommand{\dI}{\,\mathrm{d}}
+\newcommand{\linearprog}[3][maximize]{%
+\begin{array}{rl}
+  \text{#1} & \kern 1em {#2} \\[8pt]
+  \text{subject to} & {\renewcommand\arraystretch{1.1} #3}
+\end{array}%
+}
+
+\newcommand\abs[1]{\left\lvert #1 \right\rvert}
+\newcommand{\ord}{\mathcal{O}}
+\newcommand{\fourier}{\mathcal{F}}
+\newcommand*{\defeq}{\triangleq}
+\renewcommand*{\sharp}{\mathlarger{\#}}
+\newcommand*{\bZ}{\mathbb{Z}}
+\newcommand*{\bF}{\mathbb{F}}
+\newcommand*{\correspond}{\mathrel{\stackon[1.5pt]{=}{\stretchto{%
+    \scalerel*[\widthof{=}]{\wedge}{\rule{1ex}{3ex}}}{0.5ex}}}}
+\newcommand*{\Expect}{{\rm I\kern-.3em E}}
+\newcommand{\btitle}[1]{{\secname} -- #1}
+\newcommand{\disskip}[1][1]{\vspace*{-#1\parskip}}%
+\renewcommand*{\sharp}{\mathlarger{\#}}
+\newcommand{\tikzoverlay}[2]{\tikz[baseline, remember picture]{ \node[overlay node] (#1) {#2}}}%
+
+\theoremstyle{definition}
+\newtheorem{theorem}{定理}
+\newtheorem{lemma}{引理}
+\newtheorem{problem}{題目}
+
+%\colorlet{origintitlefg}{block title.fg}
+%\setbeamercolor{origintitle}{use=block,fg=block title.fg,bg=block title.bg}
+%\setbeamercolor{originbody}{use=block body,fg=block body.fg,bg=block body.bg}
+
+\newtheorem{definition}{定義}
+\BeforeBeginEnvironment{definition}{%
+  \setbeamercolor{block title}{fg=white,bg=red!70!black}
+  \setbeamercolor{block body}{fg=black, bg=block title.bg!10!bg}
+}
+\AfterEndEnvironment{definition}{
+    \setbeamercolor{block title}{use=structure,fg=white,bg=structure.fg!75!black}
+    \setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!10!bg}
+}
+
+\newenvironment{missue}{%
+\setbeamercolor{block title}{bg=ForestGreen,fg=white}
+\setbeamercolor{block body}{bg=blue!20!green!20,fg=black}
+\begin{block}{\centering 問題}}{\end{block}}
+
+\newenvironment{exercise}{%
+\setbeamercolor{block title}{bg=ForestGreen,fg=white}
+\setbeamercolor{block body}{bg=blue!20!green!20,fg=black}
+\begin{block}{習題}}{\end{block}}
+
+\renewenvironment{proof}{%
+\begin{tcolorbox}[frame empty] {\bf 證明：}\ }{\end{tcolorbox}}
+
+%\setbeamercovered{transparent}
+%\usefonttheme[onlymath]{serif}
+%\settowidth{\leftmargini}{\usebeamertemplate{itemize item}}
+
+%\makeatletter
+%\patchcmd\beamer@@tmpl@frametitle{\insertframetitle}{\insertsection-\insertframetitle}{}{}
+%\makeatother
+
+\setbeamertemplate{enumerate item}{%
+  \usebeamercolor[bg]{item projected}%
+  \raisebox{0.28ex}{\colorbox{bg}{\color{fg}\scriptsize\insertenumlabel}}%
+}
+
+\setbeamertemplate{itemize item}{%
+  \usebeamercolor[bg]{item projected}%
+  \raisebox{0.25ex}{\scriptsize$\blacksquare$}%
+}
+
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=6pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\LARGE\insertsectionhead\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}
+
+\title{IOI-camp lecture Math}
+\author{Meteor}
+
+\renewcommand*{\emph}[1]{{\bfseries #1}}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%\input{intro}
+
+\input{number_theorem}
+
+%\input{convolution}
+
+%\input{linear_programming}
+\begin{frame}
+  \begin{figure}
+    \includegraphics[width=0.7\textwidth]{figure/end.jpg}
+  \end{figure}
+\end{frame}
+\end{document}
+
