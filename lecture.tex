@@ -44,9 +44,9 @@
 \colorlet{mgreen}{green!70!black}
 \newmintinline{cpp}{bgcolor=mgray}
 \def\codesize{\fontsize{9}{12}\selectfont}
-\setmonofont{Source Code Pro}
+\setmonofont[Mapping=]{Source Code Pro}
 %\setmonofont[Contextuals={Alternate}]{Fira Code}
-\setminted{fontsize=\codesize, linenos, frame=lines, mathescape}
+\setminted{fontsize=\codesize, linenos, frame=lines, mathescape, autogobble}
 %\usemintedstyle{monokai}
 %\usepackage{circuitikz}
 %\setCJKmainfont[BoldFont=cwTex Q Hei]{cwTex Q Ming}
@@ -196,9 +196,11 @@
 
 %\input{intro}
 
-%\input{number_theorem}
+\input{number_theorem}
 
-\input{combinatorics}
+%\input{combinatorics}
+
+%\input{cpp}
 
 %\input{convolution}
 

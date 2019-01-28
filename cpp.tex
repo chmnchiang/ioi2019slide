@@ -1,0 +1,286 @@
+\documentclass[standalone]{beamer}
+
+\begin{document}
+
+\section{\texttt{C++} 心得分享}
+
+\begin{frame}[fragile]{\btitle{Initializer list \& for range}}
+  \begin{minted}{cpp}
+int a[3] = {};
+int a[3] = {0}; // in C
+int b[3] = {1, 2, 3};
+vector<int> C = {1, 2, 3};
+pair<int, int> p = {2, 4};
+  \end{minted}
+  \pause
+
+  \begin{minted}[linenos=false]{cpp}
+vector<int> V = {1, 2, 3};
+for (auto x: V) {}
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{Some tricks}}
+  \begin{minted}[linenos=false]{cpp}
+    #define int long long
+    
+    int32_t main() {
+    }
+  \end{minted}
+  \pause
+
+  \begin{minted}[linenos=false]{cpp}
+__int128 a;
+long double b;
+__float128 c;
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{Some tricks}}
+  \begin{minted}[linenos=false]{cpp}
+    #include <ext/pb_ds/assoc_container.hpp>
+    using namespace __gnu_pbds;
+    typedef tree<int, null_type, less<int>,
+        rb_tree_tag, tree_order_statistics_node_update> set_t;
+    typedef cc_hash_table<int, int> umap_t;
+  \end{minted}
+  \pause
+
+  \begin{minted}[linenos=false]{cpp}
+    priority_queue<int, greater<int>> pq;
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{Some tricks}}
+  \begin{minted}[linenos=false]{cpp}
+    int _A[MX];
+    int *A = _A + MX/2; // A[-MX/2]
+  \end{minted}
+  \pause
+
+  \begin{minted}[linenos=false]{cpp}
+    for (int i = 0; i < (1<<n); i++) {
+        // for j $\subsetneq$ i
+        for (int _j = i; _j; _j = (_j-1) & i) { j = i ^ _j }
+    }
+  \end{minted}
+  \pause
+
+  \begin{minted}[linenos=false]{cpp}
+    hypot(a, b) // sqrt(a*a + b*b); Since c++11
+    clamp(x, lo, hi) // min(max(x, lo), hi) Since c++17
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{Some tricks}}
+  \begin{minted}[]{cpp}
+    while (l < r) {
+        int mid = (l+r) / 2;
+        bool flag;
+        if (...) {
+            flag = true;
+            goto loop_end;
+        }
+    loop_end:
+        if (...) l = mid+1;
+        else r = mid;
+    }
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{???}}
+  \begin{minted}[]{cpp}
+    while (l < r) {
+        int mid = (l+r) / 2;
+        try {
+            if (...) throw true;
+        } catch (bool x) {
+            if (...) l = mid+1;
+            else r = mid;
+        }
+    }
+  \end{minted}
+  \pause
+  很慢…
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{Lambda}}
+  \begin{minted}[]{cpp}
+    while (l < r) {
+        int mid = (l+r) / 2;
+        bool flag = []() {
+            if (...) return true;
+        };
+        if (...) l = mid+1;
+        else r = mid;
+    }
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{Lambda}}
+  \begin{minted}[linenos=false]{cpp}
+    sort(begin(vec), end(vec),
+         [](int a, int b) { return a > b; });
+  \end{minted}
+
+  \begin{minted}[linenos=false]{cpp}
+    [=x, &y] (int a, bool b) { ... };
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{\texttt{C++} IO}}
+  \begin{minted}[linenos=false]{cpp}
+    ios_base::sync_with_stdio(0);
+    cin.tie(0); // speed up
+
+    cout << x << endl; // endl is slow!!
+    #define endl '\n'
+  \end{minted}
+
+  \begin{minted}[linenos=false]{cpp}
+    for (int i=0; i<vec.size(); i++)
+        cout << v[i] << " \n"[i == ((int)vec.size() - 1)];
+  \end{minted}
+\end{frame}
+
+
+%\begin{frame}[fragile]{\btitle{看過這些的表示你老了}}
+  %\begin{minted}[linenos=false]{cpp}
+    %#define FOR(i,c) for(__typeof((c).begin()) \
+                         %i=(c).begin(); i!=(c).end(); i++)
+
+    %vector<pair<int, int> > v;
+  %\end{minted}
+%\end{frame}
+
+\begin{frame}[fragile]{\btitle{大絕招}}
+  \begin{minted}[linenos=false]{cpp}
+#pragma GCC optimize ("O3") 
+  \end{minted}
+  \pause
+
+  其他的還有 SIMD 等等。
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{Increase stack}}
+  \begin{minted}{cpp}
+#include <sys/resource.h>
+void increase_stack_size() {
+    const rlim_t ks = 64*1024*1024;
+    struct rlimit rl;
+    int res = getrlimit(RLIMIT_STACK, &rl);
+    if (res == 0){
+        if (rl.rlim_cur < ks){
+            rl.rlim_cur = ks;
+            res=setrlimit(RLIMIT_STACK, &rl);
+        }
+    }
+}
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{???}}
+  \begin{problem}
+    給你 $(x_1, y_1)$, $(x_2, y_2)$，請你計算他們的曼哈頓距離。
+    輸入：一行四個 $\pm 10^9$ 內整數用空白格開。
+  \end{problem} \pause \disskip
+  \begin{minted}{cpp}
+    #include<bits/stdc++.h>
+    using namespace std;
+    int x1, y1, x2, y2;
+
+    int main() {
+        cin >> x1 >> y1 >> x2 >> y2;
+        cout << abs(x1 - x2) + abs(y1 - y2) << endl;
+    }
+  \end{minted} 
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{static}}
+  \begin{minted}[linenos=false]{cpp}
+    static int C; // (1)
+    static int f() { // (2)
+        static A[30]; // (3)
+    }
+  \end{minted} 
+  \begin{minted}[linenos=false]{bash}
+    > g++ -O2 -Wall -Wextra -Wshadow -o a a.cpp
+  \end{minted} 
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{Undefined behavior}}
+  看過很神奇的寫法： \disskip
+  \begin{minted}[linenos=false]{cpp}
+    struct Tree {
+        Tree *l, *r;
+        void walk() {
+            if (this == NULL) return;
+            l->walk();
+            r->walk();
+        }
+    }
+  \end{minted}
+  \pause
+  這是 Undefined behavior，非常不推薦！
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{Undefined behavior}}
+  \begin{enumerate}[<+->]
+    \item Signed integer overflow
+    \item Out of bound
+    \item Uninitialized scalar
+    \item Infinite loop without side-effects
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{找 Bug}}
+  \begin{minted}[]{cpp}
+    int minus(int a, int b) {
+        return a - b;
+    }
+    int input() {
+        int t;
+        cin << t;
+        return t;
+    }
+    int main() {
+        int a, b;
+        cout << minus(input(), input()) << endl;
+    }
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{\btitle{找 Bug}}
+  \begin{minted}[]{cpp}
+    int minus(int a, int b) {
+        return a - b;
+    }
+    int input() {
+        int t;
+        cin << t;
+        return t;
+    }
+    int main() {
+        int a, b;
+        cout << minus(input(), input()) << endl;
+    }
+  \end{minted}
+\end{frame}
+\begin{frame}[fragile]{\btitle{找 Bug}}
+  \[ \onslide<+->{\Expect[t_\text{AC}]\ = t_\text{\tiny 寫Code}}
+  \onslide<+->{ + p_\text{\tiny 出bug} \big( \Expect[t_\text{\tiny 你debug}] }
+  \onslide<+-> { + p_\text{\tiny 你 de 不出來} \Expect[t_\text{\tiny 隊友debug}] \big) } \]
+  \disskip
+  \begin{itemize}
+    \item<+-> 變數名稱取好一點。
+    \item<+-> 空白多用一點。
+  \end{itemize}
+  \pause
+
+    \begin{minted}[linenos=false]{cpp}
+      LL mx[ 3 ] = {};
+      for( size_t i = 1 ; i < f[ 1 ].size() ; i ++ )
+          mx[ 1 ] = max( mx[ 1 ] , f[ 1 ][ i ] - f[ 1 ][ i - 1 ] );
+    \end{minted}
+\end{frame}
+\end{document}

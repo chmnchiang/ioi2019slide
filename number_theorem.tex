@@ -208,6 +208,55 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
 \end{frame}
 
 \begin{frame}
+  \begin{problem}[Cool lucky function, {\small NTU final 2014}]
+    給你 $n$ 個正整數 $a_1, a_2, \dots, a_n$，問你這些數字之中是否存在兩個互質的數對。
+    ($2 \leq n \leq 10^5, \, a_i \leq 10^6$）
+  \end{problem}
+\end{frame}
+
+\begin{frame}
+  \begin{problem}[數學歸納法考題]
+    令 $x_1 = 1$, $x_{n+1} = 2x_n + 1$，請證明 $x_{n} \leq 2^n - 1$。
+  \end{problem} \pause
+  \begin{proof}
+    \begin{itemize}[<+->]
+      \item $n = 1$ 時顯然成立。
+      \item 假設 $n = k$ 時成立，$x_{k+1} = 2x_k + 1 \leq 2\cdot(2^k - 1) + 1 = 2^{k+1} - 1$。
+      \item 由數學歸納法證畢。
+    \end{itemize}
+  \end{proof}
+\end{frame}
+
+\begin{frame}
+  結果老師打錯一個字：
+  \begin{problem}[數學歸納法考題 -- 錯誤版]
+    令 $x_1 = 1$, $x_{n+1} = 2x_n + 1$，請證明 $x_{n} \leq 2^n \alert<1>{+} 1$。
+  \end{problem} \pause
+  \begin{proof}
+    \begin{itemize}[<+->]
+      \item $n = 1$ 時顯然成立。
+      \item 假設 $n = k$ 時成立，$x_{k+1} = 2x_k + 1 \leq 2\cdot(2^k + 1) + 1 = 2^{k+1} + 3 \nleq 2^{k+1} + 1$。
+      \item ?????
+    \end{itemize}
+  \end{proof}
+\end{frame}
+
+\begin{frame}
+  有時候題目變難，反而好做！ \pause
+
+  \begin{problem}[Cool lucky function -- Hard]
+    給你 $n$ 個正整數 $a_1, a_2, \dots, a_n$，問你這些數字之中\alert<2>{有多少對互質的數對}。
+    ($2 \leq n \leq 10^5, \, a_i \leq 10^6$）
+  \end{problem} \pause
+  排容：令 $c_k \defeq \sharp\{ (a, b) : k \mid \gcd(a, b) \}$。\pause
+
+  要算的是
+  \[ 
+    \frac{n(n-1)}{2} - \sum_{p \text{ prime}} c_p + \sum_{p,q \text{ prime}} c_{pq} - \dotsm
+  \]
+\end{frame}
+
+\begin{frame}
   \begin{missue}
     \centering
     $(\bZ / m\bZ)^\times$ 長什麼樣子？
@@ -302,6 +351,142 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
   \pause \disskip
 
   \[ a \cdot a^{\varphi(m) - 1} \equiv 1 \pmod{m} \implies a^{-1} \equiv a^{\varphi(m) - 1} \pmod{m} \]
+\end{frame}
+
+\begin{frame}{\btitle{RSA}}
+  \begin{enumerate}[<+->]
+    \item \alert<7>{選兩個大質數 $p, q$}。
+    \item \alert<6>{令 $r = \varphi(pq) = (p-1)(q-1)$}。
+    \item 選 $e$ 使得 $\gcd(e, r) = 1$，此時 $e$ 在模 $r$ 下有反元素 $d$。
+    \item 加密 $x \to x^e$。
+    \item 解密 $(x^e)^d \to x^{ed} \equiv x \pmod{pq}$。
+  \end{enumerate}
+
+  \begin{itemize}[<+->]
+    \item 我們無法快速分解因數。
+    \item 但可以快速判斷質數！
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  競賽常用的演算法：\pause
+  \begin{itemize}
+    \item 判斷 $n$ 是不是質數：Miller Rabin $ \implies \ord(\log^{\ord(1)}(n))$
+    \item 因數分解 $n$ ：Pollard's rho $ \implies \ord(n^{1/4})$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{\btitle{找循環節}}
+  \begin{problem}[找循環節]
+    給你一個函數 $f$ 和 $x_0$，對於所有 $i \geq 1$ 令 $x_i \defeq f(x_{i-1})$，
+    找出 $i \neq j$ 使得 $x_i = x_j$。
+  \end{problem}
+  \pause
+
+  \begin{enumerate}[<+->]
+    \item 令 $x = y = x_0$。
+    \item 每次 $x \gets f(x)$, $y \gets f(f(y))$。
+    \item 有循環節的話總是會找到。
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{\btitle{生日悖論}}
+  現在有 $70$ 個人，生日都在 $3 \cdot 365$ 天的範圍內。假設每個人的生日是獨立的，
+  有 $99\%$ 的機率兩個人同年同月同日生！ \pause
+
+  假設有 $n$ 個人，隨機選 $m$ 個位置。\\ \pause
+  任兩個人同個位置的機率是 $1 / m$。 \\ \pause
+  令 $X$ 表示有多少對人是同一個位置
+  \[ \implies \Expect[X] = \frac{n(n-1)}{2} \frac{1}{m} \]
+  \pause
+  $n^2 \approx m \implies n = \ord(\sqrt{m})$ 時就有高機率相撞！
+\end{frame}
+
+\begin{frame}{\btitle{生日悖論應用}}
+  用 Hash 解以下兩題：
+  \begin{problem}
+    給你 $n$ 個字串，問其中有沒有字串和 $A$ 相等。
+  \end{problem}
+  \pause
+  \begin{problem}
+    給你 $n$ 個字串，問其中有沒有兩個字串相等。
+  \end{problem}
+  \pause
+  Hash 的值分別要超過 $\ord(n), \ord(n^2)$。
+\end{frame}
+
+\begin{frame}{\btitle{期望值}}
+  期望值有一個好性質：
+  \begin{theorem} 如果 $X, Y$ 是兩個隨機變數，\alert<1>{不論 $X, Y$ 是否獨立}，都有
+  \[
+    \Expect[aX + Y] = a\Expect[X] + \Expect[Y] \label{eq:expect_linear}
+  \]
+  \pause
+  \end{theorem}
+  這常是解題的關鍵
+\end{frame}
+
+\begin{frame}{\btitle{期望值}}
+  \begin{problem}[Graph Game, Codeforces 235D]
+    現在有一個遊戲：
+    \begin{enumerate}[<+->]
+      \item 一開始的分數是 $0$，並且有一個 $n$ 個點的樹。
+      \item 每次從剩下的點中隨機且等機率的選出一個點 $v$，並把分數加上 $v$ 所在的
+        連通塊的大小，且把 $v$ 和與 $v$ 相鄰的邊全部刪掉。
+      \item 一直進行到圖上沒有點為止。
+    \end{enumerate} \pause
+
+    問你得到的分數的期望值。
+  \end{problem}
+\end{frame}
+
+\begin{frame}{\btitle{期望值}}
+  改求 $u$ 被拔掉時 $u, v$ 還連通的機率。 \pause
+  \begin{figure}
+    \begin{tikzpicture}[every node/.style={circle, draw, minimum size=5mm, inner sep=1mm}]
+      \node(1) at (0, 0) {};
+      \node(2) at (1, 0) {};
+      \node[fill=green!80] (3) at (2, 0) {$v$};
+      \node(4) at (-1, 0) {};
+      \node[fill=blue!30] (5) at (-2, 0) {$u$};
+      \draw (1) edge[thick] (2);
+      \draw (3) edge[thick] (2);
+      \draw (1) edge[thick] (4);
+      \draw (5) edge[thick] (4);
+    \end{tikzpicture}
+  \end{figure} \pause
+
+  等價於 $u$ 是這些點中第一個被拔掉的點 \pause。 \\
+  $\implies p = 1/n$，$n$ 是 $u, v$ 間（包含）有幾個點。
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{cpp}
+    int f(int x, int n) { return (x*x + 2) % n }
+    int pollard_rho(int n) {
+        int xi, xj;
+        int i = 1, j = 1;
+        xi = xj = 2;
+        while (true) {
+            j++;
+            xi = f(xi, n);
+            xj = f(f(xj, n));
+            int d = __gcd(abs(xi - xj), n);
+            if (d != 1) return d;
+        }
+    }
+  \end{minted}
+\end{frame}
+
+\begin{frame}{\btitle{Pollard's rho}}
+  假設 $n = pq$ \pause
+  \begin{enumerate}[<+->]
+    \item 用偽隨機函數 $f$ 生成序列 $x_0, x_1, \dots $。
+    \item 當產生的數 $n \equiv \sqrt{p}$ 時應該就會有 $x_i \equiv x_j \pmod{p}$，
+      也就是 $x_i \pmod{p}$ 在循環了。
+    \item 令 $g \defeq \gcd(x_i - x_j, n)$，因為 $p, q$ 互質不太可能也剛好 $x_i \equiv x_j \pmod{q}$，
+      所以 $g$ 高機率會是一個真因數。
+  \end{enumerate}
 \end{frame}
 
 \begin{frame}

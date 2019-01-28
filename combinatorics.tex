@@ -1,7 +1,65 @@
 \documentclass[standalone]{beamer}
 
 \begin{document}
+
 \section{組合}
+
+\begin{frame}{\btitle{目標}}
+  \begin{enumerate}[<+->]
+    \item $x_1 + x_2 + \dots + x_n = m$，且每個 $x_i \geq 0$ 的方法數：
+      \onslide<+->{ \begin{flalign*} \implies {m+n-1 \choose m} && \end{flalign*} }
+    \item 用 $1 \times 2$ 瓷磚（可旋轉）排滿 $2 \times n$ 長方形的方法數： \\
+      \onslide<+->{$\mathtt{Fib}_n = \mathtt{Fib}_{n-1} + \mathtt{Fib}_{n-2}$, $\mathtt{Fib}_1 = 1$, $\mathtt{Fib}_0 = 0$}
+  \end{enumerate}
+    \pause
+  \begin{missue}
+  \begin{figure}
+    \includegraphics[width=0.5\textwidth]{figure/fib.png}
+  \end{figure}
+  \end{missue}
+\end{frame}
+
+\begin{frame}
+  \[
+  \begin{bmatrix}
+    F_{n+1} \\
+    F_{n}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    1 & 1 \\
+    1 & 0 \\
+  \end{bmatrix}
+  \begin{bmatrix}
+    F_{n} \\
+    F_{n-1}
+  \end{bmatrix}
+\]
+\pause
+
+如果求的是模一個數 $m \implies$ 快速冪：$\ord(\log n)$。
+\end{frame}
+
+\begin{frame}
+  \begin{enumerate}[<+->]
+    \setcounter{enumi}{2}
+  \item 把正 $n+2$ 邊型三角分割的方法數：\onslide<+->{卡特蘭數 
+      \[ C_{m+1} = \sum_k C_k C_{m-k}, \ C_0 = 1 \]
+    }
+  \item $n!$ 種 $1$ 到 $n$ 的排列 $p$，滿足 $p_i \neq i, \, \forall i$ 的錯排數：
+    \onslide<+->{\[ \sum_{k = 0}^n (-1)^k {n \choose k} (n-k)! \]}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \begin{enumerate}[<+->]
+    \setcounter{enumi}{4}
+  \item $n$ 個點可以構成的生成樹的個數，點視為相異的：\onslide<+->{$n^{n-2}$} \\[2ex]
+  \item 給 $n$ 個數字 $A = \{a_1, a_2, \dots, a_n\}$，有多少個 $A$ 的子集 $B$
+    使得 $\bigoplus_{x \in B} x = 0$，$\bigoplus$ 表示 bit \texttt{XOR}：
+      \onslide<+->{\[2^{n - \operatorname{rank}(A)}\]}
+  \end{enumerate}
+\end{frame}
 
 \begin{frame}{\btitle{目標}}
   \begin{problem}[經典問題]
@@ -26,6 +84,7 @@
     \node[nd] at (270:0.3) [#6] {};
   \end{scope}
 }
+
 \begin{frame}{\btitle{目標}}
   \begin{columns}
     \begin{column}{0.6\textwidth}
@@ -43,7 +102,9 @@
           \chain{(1, 2)}{w}{b}{w}{b}
 
           \chain{(0, 3)}{b}{b}{w}{w}
-          \chain{(1, 3)}{w}{w}{b}{b}
+          \chain{(1, 3)}{w}{b}{b}{w}
+          \chain{(2, 3)}{w}{w}{b}{b}
+          \chain{(3, 3)}{b}{w}{w}{b}
 
           \chain{(0, 4)}{b}{b}{b}{w}
           \chain{(1, 4)}{b}{b}{w}{b}
@@ -96,7 +157,9 @@
           \node (burn_x) at (1.4, 2) {};
 
           \chain{(0, 3)}{b}{b}{w}{w}
-          \chain{(1, 3)}{w}{w}{b}{b}
+          \chain{(1, 3)}{w}{b}{b}{w}
+          \chain{(2, 3)}{w}{w}{b}{b}
+          \chain{(3, 3)}{b}{w}{w}{b}
 
           \chain{(0, 4)}{b}{b}{b}{w}
           \chain{(1, 4)}{b}{b}{w}{b}
@@ -137,6 +200,10 @@
 \end{enumerate}
 \end{frame}
 
+\newcommand{\hiltch}[2]{
+ \fill<#1>[red, opacity=0.2] #2 circle (0.48);
+ \draw[draw=none] #2 circle (0.48);
+}
 \begin{frame}
 
   \begin{columns}
@@ -144,35 +211,69 @@
       \begin{figure}
         \begin{tikzpicture}[x=1.3cm, y=-1.3cm, remember picture]
           \chain{(0, 0)}{w}{w}{w}{w}
-          \fill[blue, opacity=0.2] (0, 0) circle (1);
           \chain{(3, 0)}{b}{b}{b}{b}
+          \hiltch{2,4,6,8}{(0, 0)}
+          \hiltch{2,4,6,8}{(3, 0)}
 
           \chain{(0, 1)}{w}{w}{w}{b}
           \chain{(1, 1)}{w}{w}{b}{w}
           \chain{(2, 1)}{w}{b}{w}{w}
           \chain{(3, 1)}{b}{w}{w}{w}
+          \hiltch{2}{(0, 1)}
+          \hiltch{2}{(1, 1)}
+          \hiltch{2}{(2, 1)}
+          \hiltch{2}{(3, 1)}
 
           \chain{(0, 2)}{b}{w}{b}{w}
           \chain{(1, 2)}{w}{b}{w}{b}
+          \hiltch{2,6}{(0, 2)}
+          \hiltch{2,6}{(1, 2)}
 
           \chain{(0, 3)}{b}{b}{w}{w}
-          \chain{(1, 3)}{w}{w}{b}{b}
+          \chain{(1, 3)}{w}{b}{b}{w}
+          \chain{(2, 3)}{w}{w}{b}{b}
+          \chain{(3, 3)}{b}{w}{w}{b}
+          \hiltch{2}{(0, 3)}
+          \hiltch{2}{(1, 3)}
+          \hiltch{2}{(2, 3)}
+          \hiltch{2}{(3, 3)}
 
           \chain{(0, 4)}{b}{b}{b}{w}
           \chain{(1, 4)}{b}{b}{w}{b}
           \chain{(2, 4)}{b}{w}{b}{b}
           \chain{(3, 4)}{w}{b}{b}{b}
+          \hiltch{2}{(0, 4)}
+          \hiltch{2}{(1, 4)}
+          \hiltch{2}{(2, 4)}
+          \hiltch{2}{(3, 4)}
         \end{tikzpicture}
-        \caption{$M = 2$, $N = 2$ 的例子}
       \end{figure}
     \end{column}
     \vrule{}
     \begin{column}{0.4\textwidth}
       \begin{enumerate}[<+->]
         \item $\abs{X^{1}} = \onslide<+->{16} $
+        \item $\abs{X^{a}} = \onslide<+->{2} $
+        \item $\abs{X^{a^2}} = \onslide<+->{4} $
+        \item $\abs{X^{a^3}} = \onslide<+->{2} $
       \end{enumerate}
+      \pause
+
+      \[ \frac{16 + 2 + 4 + 2}{4} = 6 \]
     \end{column}
   \end{columns}
 \end{frame}
 
+\begin{frame}
+  \begin{proof}
+  \begin{align*}
+   \frac{1}{\abs{G}} \sum_{g \in G} \abs{X^g} &= \frac{1}{\abs{G}}
+   \sharp \big\{ (x, g) \mid x \in X, g \in G, x g = g \big\} \\
+   &= \frac{1}{\abs{G}} \sum_{x \in X} \abs{G_x} \\
+   &{=} \frac{1}{\abs{G}} \sum_{x \in X} \frac{\abs{G}}{\abs{Gx}}\\
+   &{=} \sum_{Gx \in X / G} \ \sum_{x \in Gx} \frac{1}{\abs{Gx}} = \sum_{Gx \in X/G} 1\\
+   &= \abs{X / G}
+  \end{align*}
+  \end{proof}
+\end{frame}
 \end{document}
