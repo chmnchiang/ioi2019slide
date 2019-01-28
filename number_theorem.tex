@@ -160,9 +160,64 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
     \[ \psi(x) = (x \bmod m_1, x \bmod m_2, \dots, x \bmod m_k) \]
     是一個一對一且滿射的函數，且
     \[
-      \bZ / m\bZ \cong \bZ / m_1 \bZ \tikzoverlay{ch_m1}{$\:\times\:$} \bZ / m_2 \bZ \tikzoverlay{ch_m2}{$\:\times\:$} \dots \times \bZ / m_k \bZ
+      \bZ / m\bZ \,\cong\, \bZ / m_1 \bZ \tikzoverlay{ch_m1}{$\:\times\:$} \bZ / m_2 \bZ \tikzoverlay{ch_m2}{$\:\times\:$} \dots \times \bZ / m_k \bZ
     \]
   \end{theorem}
+  \pause
+
+  \visible<+->{
+    \begin{tikzpicture}[overlay, remember picture]
+      \node[inner sep=0.2ex] (txt) at ($(ch_m1) + (-1, -1.5)$) {\cppinline[fontsize=\ofootnotesize]{std::tuple<T, U, ...>}};
+      \path[->] (txt.north) edge[out=70, in=260] (ch_m1.south);
+      \path[->] (txt.north) edge[out=60, in=230] (ch_m2.south);
+    \end{tikzpicture}
+  }
+\end{frame}
+
+\begin{frame}
+  \begin{theorem}
+    假設 $n, m$ 互質，則 $\varphi(nm) = \varphi(n) \varphi(m)$。
+  \end{theorem}
+  \pause
+
+  \begin{proof}
+    \begin{enumerate}[<+->]
+      \item 因為 $\gcd(a, nm) = 1$ $\iff \gcd(a, n) = 1 \ \text{且} \gcd(a, m) = 1$。
+      \item 每個滿足 $\gcd(x, n) = 1$ 且 $\gcd(y, m) = 1$ 的數對 $(x, y)$ 由中國剩餘定理
+        又可以對回模 $nm$ 下的一個數。
+      \item 這樣的數對有 $\varphi(n) \varphi(m)$ 個。
+    \end{enumerate}
+  \end{proof}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}[<+->]
+    \item $\varphi(p) = p-1$。
+    \item $\varphi(p^k) = p^{k-1}(p-1)$。
+  \end{itemize}
+
+  \begin{theorem}
+    如果 $n = p_1^{\alpha_1} p_2^{\alpha_2} \dotsm p_k^{\alpha_k}$，則
+    \[
+      \begin{aligned}
+        \varphi(n) &= p_1^{\alpha_1-1} (p_1 - 1) p_2^{\alpha_2-1}(p_2 - 1) \dotsm p_k^{\alpha_k-1}(p_k - 1) \\
+        &= n \prod_{p \mid n} \left( 1 - \frac{1}{p} \right)
+      \end{aligned}
+    \]
+  \end{theorem}
+\end{frame}
+
+\begin{frame}
+  \begin{missue}
+    \centering
+    $(\bZ / m\bZ)^\times$ 長什麼樣子？
+  \end{missue}
+  \pause
+
+  我們只要會 $(\bZ / p^k \bZ)^\times$ 就可以了，其中 $p$ 是質數。
+  \pause
+
+  先看 $(\bZ / p \bZ)^\times$。
 \end{frame}
 
 \begin{frame}
@@ -221,13 +276,40 @@ long long fpow(long long a, long long b, α\textcolor{haohao}{\textbf{long 1ong}
 \end{frame}
 
 \begin{frame}
-  \begin{definition}[階]
-    定義 $n \defeq \operatorname{ord}_m(a)$ 為最小的正整數 $n$ 使得 $a^n \equiv 1 \pmod{m}$。
-  \end{definition}
+  %\begin{definition}[階]
+    %定義 $n \defeq \operatorname{ord}_m(a)$ 為最小的正整數 $n$ 使得 $a^n \equiv 1 \pmod{m}$。
+  %\end{definition}
+  %\pause
 
   \begin{definition}[原根]
-    定義 $n \defeq \operatorname{ord}_m(a)$ 為最小的正整數 $n$ 使得 $a^n \equiv 1 \pmod{m}$。
+    如果 $a^k$ 遍歴所有 $(\bZ / m \bZ)^\times$ 下的元素，我們就說 $a$ 是一個\emph{原根}。
   \end{definition}
+  \pause
+
+  \begin{theorem}[原根存在的條件]
+    原根存在若且唯若 $m = 1, 2, 4, p^k, 2p^k$。
+  \end{theorem}
+  \pause
 \end{frame}
 
+\begin{frame}
+  \begin{theorem}[Euler 定理]
+    \begin{itemize}
+      \item 對於質數 $p$，$a^{p-1} \equiv 1 \pmod{p}$。
+      \item 對於任何數 $m$，$a^{\varphi(m)} \equiv 1 \pmod{m}$。
+    \end{itemize}
+  \end{theorem}
+  \pause \disskip
+
+  \[ a \cdot a^{\varphi(m) - 1} \equiv 1 \pmod{m} \implies a^{-1} \equiv a^{\varphi(m) - 1} \pmod{m} \]
+\end{frame}
+
+\begin{frame}
+  \begin{problem}[An Easy Problem -- Subtask \#4, NTUJ 1423]
+    給你 $b$, $c$, $p$，請你求 $a$ 使得 $a^b \equiv c \pmod{p}$。\\
+    ($b, c, p \leq 10^9$, $p$ 是數且 $\gcd(b, p-1) \leq 10^5$)
+  \end{problem} \pause
+
+  請看講義…
+\end{frame}
 \end{document}
